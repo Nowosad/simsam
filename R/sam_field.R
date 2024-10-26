@@ -4,8 +4,8 @@
 #' @param nsamples Integer. Number of samples to simulate.
 #' @param dsamples Character. Spatial distribution of the samples. 5 are
 #' possible: sregular, wregular, random, wclust, sclust.
-sam_field = function(rast_grid, nsamples, dsamples) {
-  sarea = sf::st_as_sf(terra::as.polygons(terra::ext(rast_grid)))
+sam_field = function(sarea, nsamples, dsamples) {
+  # sarea = sf::st_as_sf(terra::as.polygons(terra::ext(rast_grid)))
   if (dsamples == "sregular") {
     simpoints = jitterreg_sample(sarea, nsamples, 2)
   } else if (dsamples == "wregular") {

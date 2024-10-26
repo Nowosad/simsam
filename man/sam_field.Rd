@@ -4,7 +4,7 @@
 \alias{sam_field}
 \title{Sample simulation}
 \usage{
-sam_field(rast_grid, nsamples, dsamples)
+sam_field(sarea, nsamples, dsamples)
 }
 \arguments{
 \item{nsamples}{Integer. Number of samples to simulate.}
