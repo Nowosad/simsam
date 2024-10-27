@@ -1,7 +1,7 @@
 extract_field = function(rast_data, y) {
-    if (missing(sam_points)) {
+    if (missing(y)) {
         df_extract = terra::as.data.frame(rast_data)
-    else {
+    } else {
         df_extract = terra::extract(rast_data, y, ID = FALSE)
     }
     return(df_extract)

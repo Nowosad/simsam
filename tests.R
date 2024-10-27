@@ -32,7 +32,8 @@ terra::plot(s_many_outcomes, nc = 2)
 # sampling -------------------------------------
 
 # sregular, wregular, random, wclust, sclust.
-sam1 = sam_field(rast_grid, 100, "sregular")
+sarea = sf::st_as_sf(terra::as.polygons(terra::ext(rast_grid)))
+sam1 = sam_field(sarea, 100, "sregular")
 
 library(purrr)
 param_df = expand.grid(
@@ -48,3 +49,4 @@ library(tmap)
 tm_shape(sam_many) +
   tm_dots() +
   tm_facets_grid(rows = "nsamples", columns = "dsamples")
+
