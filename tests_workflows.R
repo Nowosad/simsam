@@ -4,16 +4,17 @@ devtools::load_all()
 
 # simulate data ---------------------------------------------------
 rast_grid = terra::rast(ncols = 300, nrows = 100,
-                        xmin = 0, xmax = 300,
-                        ymin = 0, ymax = 100)
+                        xmin = 0, xmax = 300, ymin = 0, ymax = 100)
 s1 = sim_field(1, 25, "autocor")
 s1
 
 # sample data -----------------------------------------------------
-sampling_area = matrix(c(0,0,100,0,100,100,0,100,0,0), ncol=2, byrow=TRUE)
-sampling_area = sf::st_sf(geom=sf::st_sfc(sf::st_polygon(list(sampling_area))))
-extra_area = matrix(c(200,0,300,0,300,100,200,100,200,0), ncol=2, byrow=TRUE)
-extra_area = sf::st_sf(geom=sf::st_sfc(sf::st_polygon(list(extra_area))))
+specify_area = function(ext){
+  sf::st_sf(geom = sf::st_as_sfc(sf::st_bbox(terra::ext(ext))))
+}
+
+sampling_area = specify_area(c(0, 100, 0, 100))
+extra_area = specify_area(c(200, 300, 0, 100))
 
 train_points = sam_field(sampling_area, 200, "random")
 test_inter = sam_field(sampling_area, 100, "random")
@@ -42,11 +43,11 @@ tune_mod = caret::train(traindf[covariates], traindf[, "outcome"], method = "ran
 ## accuracy
 surface_inter = postResample(pred = predict(tune_mod, newdata=gridinter_data),
                              obs = gridinter_data$outcome)
-surface_extra = postResample(pred = predict(tune_mod, newdata=gridextra_data), 
+surface_extra = postResample(pred = predict(tune_mod, newdata=gridextra_data),
                              obs = gridextra_data$outcome)
-test_inter = postResample(pred = predict(tune_mod, newdata=testinter_data), 
+test_inter = postResample(pred = predict(tune_mod, newdata=testinter_data),
                           obs = testinter_data$outcome)
-test_extra = postResample(pred = predict(tune_mod, newdata=testextra_data), 
+test_extra = postResample(pred = predict(tune_mod, newdata=testextra_data),
                           obs = testextra_data$outcome)
 
 # cvs -------------------------------------------------------------
@@ -54,8 +55,8 @@ train_cv = function(x, covariates, tune_mod, folds) {
   indxs = CreateSpacetimeFolds(data.frame(ID = folds), spacevar = "ID", k = 5)
   tgrid = data.frame(mtry = tune_mod$bestTune$mtry, splitrule = "variance", min.node.size = 5)
   tctrl = trainControl(method = "cv", index = indxs$index, savePredictions = "final")
-  tmodl = caret::train(x[covariates], traindf[, "outcome"], method = "ranger", 
-                            importance = "none", trControl = tctrl, 
+  tmodl = caret::train(x[covariates], traindf[, "outcome"], method = "ranger",
+                            importance = "none", trControl = tctrl,
                             num.trees = 100, tuneGrid = tgrid)
   return(tmodl)
 }
