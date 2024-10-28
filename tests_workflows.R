@@ -32,22 +32,22 @@ testextra_data = extract_field(s1, test_extra)
 # tune model ------------------------------------------------------
 tune_ctrl = trainControl(method = "oob")
 
-tune_grid = round(seq(2, length(covariates), length.out = 5))
-tune_grid = data.frame(mtry = tune_grid[!duplicated(tune_grid)],
-                       splitrule = "variance", min.node.size = 5)
+mtry = round(seq(2, length(covariates), length.out = 5))
+mtry = mtry[!duplicated(mtry)]
+tune_grid = data.frame(mtry = mtry, splitrule = "variance", min.node.size = 5)
 
-tune_mod = caret::train(traindf[covariates], traindf[, "outcome"], method = "ranger",
-                        importance = "impurity", num.trees = 100,
-                        trControl = tune_ctrl, tuneGrid = tune_grid)
+tune_mod = caret::train(traindf[covariates], traindf[, "outcome"],
+                        method = "ranger", importance = "impurity",
+                        num.trees = 100, trControl = tune_ctrl, tuneGrid = tune_grid)
 
 ## accuracy
-surface_inter = postResample(pred = predict(tune_mod, newdata=gridinter_data),
+surface_inter = postResample(pred = predict(tune_mod, newdata = gridinter_data),
                              obs = gridinter_data$outcome)
-surface_extra = postResample(pred = predict(tune_mod, newdata=gridextra_data),
+surface_extra = postResample(pred = predict(tune_mod, newdata = gridextra_data),
                              obs = gridextra_data$outcome)
-test_inter = postResample(pred = predict(tune_mod, newdata=testinter_data),
+test_inter = postResample(pred = predict(tune_mod, newdata = testinter_data),
                           obs = testinter_data$outcome)
-test_extra = postResample(pred = predict(tune_mod, newdata=testextra_data),
+test_extra = postResample(pred = predict(tune_mod, newdata = testextra_data),
                           obs = testextra_data$outcome)
 
 # cvs -------------------------------------------------------------
@@ -55,9 +55,9 @@ train_cv = function(x, covariates, tune_mod, folds) {
   indxs = CreateSpacetimeFolds(data.frame(ID = folds), spacevar = "ID", k = 5)
   tgrid = data.frame(mtry = tune_mod$bestTune$mtry, splitrule = "variance", min.node.size = 5)
   tctrl = trainControl(method = "cv", index = indxs$index, savePredictions = "final")
-  tmodl = caret::train(x[covariates], traindf[, "outcome"], method = "ranger",
-                            importance = "none", trControl = tctrl,
-                            num.trees = 100, tuneGrid = tgrid)
+  tmodl = caret::train(x[covariates], traindf[, "outcome"],
+                       method = "ranger", importance = "none",
+                       num.trees = 100,  trControl = tctrl, tuneGrid = tgrid)
   return(tmodl)
 }
 
@@ -74,22 +74,18 @@ global_validation(inter_mod)
 global_validation(extra_mod)
 
 random_mod_pred = terra::predict(s1, random_mod)
-terra::plot(random_mod_pred)
 inter_mod_pred = terra::predict(s1, inter_mod)
-terra::plot(inter_mod_pred)
 extra_mod_pred = terra::predict(s1, extra_mod)
-terra::plot(extra_mod_pred)
 terra::panel(c(random_mod_pred, inter_mod_pred, extra_mod_pred), nr = 3)
 
 # aoa -------------------------------------------------------------
-aoa_cv = function(grid, tune_mod){
-    suppressMessages(CAST::aoa(grid, tune_mod, verbose = FALSE))
+aoa_prop = function(grid, tune_mod){
+    maoa = suppressMessages(CAST::aoa(grid, tune_mod, verbose = FALSE))
+    sum(maoa$AOA == 1) / length(maoa$AOA) * 100
 }
 
-aoa_inter = aoa_cv(gridinter_data, tune_mod)
-# sum(aoa_inter$AOA==1)/length(aoa_inter$AOA)*100
-aoa_extra = aoa_cv(gridextra_data, tune_mod)
-# sum(aoa_extra$AOA==1)/length(aoa_extra$AOA)*100
+aoa_prop(gridinter_data, tune_mod)
+aoa_prop(gridextra_data, tune_mod)
 
 # varimp ----------------------------------------------------------
 varimp = function(tune_mod, covariates){

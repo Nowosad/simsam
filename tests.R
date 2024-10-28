@@ -15,7 +15,7 @@ pc_edf = proxy_edf(rast_grid)
 terra::plot(pc_edf)
 
 # simulations -------------------------------------
-s1 = sim_field(1, 25, "autocor")
+s1 = sim_field(rast_grid, 1, 25, "autocor")
 terra::plot(s1)
 
 library(purrr)
