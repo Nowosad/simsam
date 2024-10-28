@@ -1,4 +1,4 @@
-sim_field = function(seed, range, scenario) {
+sim_field = function(rast_grid, seed, range, scenario) {
 
   # Print progress
   # print(seed)
@@ -8,9 +8,9 @@ sim_field = function(seed, range, scenario) {
   res = data.frame()
 
   # Create grids (raster and point format) and sampling and extrapolation area
-  rast_grid = terra::rast(ncols = 300, nrows = 100,
-                          xmin = 0, xmax = 300,
-                          ymin = 0, ymax = 100)
+  # rast_grid = terra::rast(ncols = 300, nrows = 100,
+  #                         xmin = 0, xmax = 300,
+  #                         ymin = 0, ymax = 100)
   point_grid = sf::st_as_sf(terra::as.points(rast_grid, values = FALSE, na.rm = FALSE))
 
   # Simulate 6 covariates from a semivariogram and stack

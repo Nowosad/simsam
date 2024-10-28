@@ -5,8 +5,8 @@ fold_folds = function(train_points, rast_grid, aoi){
         point_grid = sf::st_as_sf(terra::as.points(rast_grid, values = FALSE, na.rm = FALSE))
         folds = suppressMessages(suppressWarnings(
             CAST::knndm(train_points,
-                  predpoints = sf::st_intersection(point_grid, aoi),
-                  k = 5, maxp = 0.5)$clusters
+                        predpoints = sf::st_intersection(point_grid, aoi),
+                        k = 5, maxp = 0.5)$clusters
             ))
     }
     return(folds)
