@@ -1,0 +1,72 @@
+---
+format:
+  html:
+    embed-resources: true
+    mermaid-format: png
+---
+
+## Predicting approach
+
+```{mermaid}
+flowchart TB
+    D[External raster data] --> E(Preprocess)
+    E --> F[Feature engineering, including adding proxies]
+    A[Existing point data] --> B(Split) 
+    B --> C1[Training data]
+    B --> C2[Testing data]
+    F --> G(Model specification)
+    C1 --> G
+    G --> H(Hyperparameter tuning and feature selection)
+    H --> I(Model evaluation)
+    I --> J[Final model]
+    J --> L(Final model analysis)
+    J --> M(Final model deployment)
+    J --> K
+    C2 --> K(Final performance evaluation)
+```
+
+## Investigating approach
+
+
+```{mermaid}
+%%| column: screen-inset
+flowchart TD
+    D[Simulated raster data] --> E[Feature engineering,\nincluding adding proxies]
+    E --> F(Split)
+    F --> G1[Interpolation area]
+    F --> G2[Extrapolation area]
+    A[Artificial sample points] --> B(Split) 
+    B --> C1[Training data\n-- interpolation area]
+    B --> C2[Testing data\n-- interpolation area]
+    B --> C3[Testing data\n-- extrapolation area]
+    G1 --> H(Model specification)
+    C1 --> H
+    H --> I(Hyperparameter tuning\nand feature selection)
+    I --> I2[Model]
+    I2 --> J{Model\nevaluation}
+    G1 --> K1
+    C2 --> K3
+    C3 --> K4
+    J --> K3{{Sample model\nquality, e.g., RSME\n-- interpolation area}}
+    J --> K4{{Sample model\nquality, e.g., RSME\n-- extrapolation area}}
+    J --> K1{{Complete model\nquality, e.g., RSME\n-- interpolation area}}
+    J --> K2{{Complete model\nquality, e.g., RSME\n-- extrapolation area}}
+    G2 --> K2
+    I2 --> J2{Model\ncross-validations}
+    J2 --> L1{{Random CV,\ne.g., RSME\n-- interpolation area}}
+    J2 --> L2{{knndm CV,\ne.g., RSME\n-- interpolation area}}
+    J2 --> L3{{knndm CV,\ne.g., RSME\n-- extrapolation area}}
+    J --> K5{{Area of applicability\nfor interpolation and\nextrapolation areas}}
+    G1 --> K5
+    G2 --> K5
+    J --> K6{{Feature importance\nUncertainty estimation\nPattern comparison}}
+```
+
+Repeat for:
+
+1. Different simulation scenarios
+2. Different point sample sizes and distributions
+3. Different feature engineering approaches
+4. Different model specifications (e.g., different algorithms, different hyperparameters, different CV schemes, different feature sets)
+
+<https://gmd.copernicus.org/articles/17/6007/2024/gmd-17-6007-2024.pdf>
