@@ -1,4 +1,4 @@
-mod_tune = function(train_data, covariates){
+tune_mod = function(train_data, covariates){
   tune_ctrl = caret::trainControl(method = "oob")
 
   mtry = round(seq(2, length(covariates), length.out = 5))
