@@ -4,7 +4,6 @@ specify_area = function(ext){
   sf::st_sf(geom = sf::st_as_sfc(sf::st_bbox(terra::ext(ext))))
 }
 models = function(train_data, covariates, tune_mod, random_folds, inter_folds, extra_folds){
-  tune_mod = mod_tune(train_data, covariates)
   random_mod = mod_cv(train_data, covariates, tune_mod, random_folds)
   inter_mod = mod_cv(train_data, covariates, tune_mod, inter_folds)
   extra_mod = mod_cv(train_data, covariates, tune_mod, extra_folds)

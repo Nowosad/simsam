@@ -4,6 +4,7 @@
 #' @param nsamples Integer. Number of samples to simulate.
 #' @param dsamples Character. Spatial distribution of the samples. 5 are
 #' possible: sregular, wregular, random, wclust, sclust.
+#' @export
 sam_field = function(sarea, nsamples, dsamples) {
   # sarea = sf::st_as_sf(terra::as.polygons(terra::ext(rast_grid)))
   if (dsamples == "sregular") {

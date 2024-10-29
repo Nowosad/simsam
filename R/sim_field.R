@@ -1,8 +1,18 @@
-sim_field = function(rast_grid, seed, range, scenario) {
+#' Title
+#'
+#' @param rast_grid
+#' @param range
+#' @param scenario
+#'
+#' @return
+#' @export
+#'
+#' @examples
+sim_field = function(rast_grid, range, scenario) {
 
   # Print progress
   # print(seed)
-  set.seed(seed)
+  # set.seed(seed)
 
   # Create an empty results object
   res = data.frame()

@@ -1,3 +1,13 @@
+#' Title
+#'
+#' @param train_points
+#' @param rast_grid
+#' @param aoi
+#'
+#' @return
+#' @export
+#'
+#' @examples
 fold_folds = function(train_points, rast_grid, aoi){
     if (missing(rast_grid) && missing(aoi)){
         folds = sample((1:nrow(train_points) %% 5) + 1, nrow(train_points))

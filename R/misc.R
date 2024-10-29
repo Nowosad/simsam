@@ -11,7 +11,7 @@ mod_tune = function(train_data, covariates){
   return(tune_mod)
 }
 
-mod_cv = function(train_data, covariates, tune_mod, folds) {
+mod_cv = function(train_data, tune_mod, folds, covariates) {
   indxs = CAST::CreateSpacetimeFolds(data.frame(ID = folds), spacevar = "ID", k = 5)
   tgrid = data.frame(mtry = tune_mod$bestTune$mtry, splitrule = "variance", min.node.size = 5)
   tctrl = caret::trainControl(method = "cv", index = indxs$index, savePredictions = "final")
@@ -21,12 +21,12 @@ mod_cv = function(train_data, covariates, tune_mod, folds) {
   return(tmodl)
 }
 
-aoa_prop = function(grid, tune_mod){
+aoa_prop = function(tune_mod, grid){
   maoa = suppressMessages(CAST::aoa(grid, tune_mod, verbose = FALSE))
   sum(maoa$AOA == 1) / length(maoa$AOA) * 100
 }
 
-varimp_perc = function(covariates, tune_mod){
+varimp_perc = function(tune_mod, covariates){
   if (all(covariates %in% paste0("cov", 1:6))){
     impfeat = 100
   } else {
