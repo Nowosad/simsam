@@ -40,13 +40,13 @@ extra_folds = fold_folds(train_points, rast_grid, extra_area)
 
 # build models --------------------------------------------------
 covariates_baseline = paste0("cov", 1:6)
-ms_baseline = models(traindf, covariates, tune_mod, random_folds, inter_folds, extra_folds)
+ms_baseline = models(traindf, covariates_baseline, tune_mod, random_folds, inter_folds, extra_folds)
 
-covariates_coords = c(covariates_baseline, "x", "y")
-ms_coords = models(traindf, covariates, tune_mod, random_folds, inter_folds, extra_folds)
+covariates_coords = c(covariates_baseline, "X", "Y")
+ms_coords = models(traindf, covariates_coords, tune_mod, random_folds, inter_folds, extra_folds)
 
-covariates_edf = c(covariates_baseline, "x", "y", paste0("EDF", 1:5))
-ms_edf = models(traindf, covariates, tune_mod, random_folds, inter_folds, extra_folds)
+covariates_edf = c(covariates_baseline, "X", "Y", paste0("EDF", 1:5))
+ms_edf = models(traindf, covariates_edf, tune_mod, random_folds, inter_folds, extra_folds)
 
 # evaluate models ------------------------------------------------
 testing_sets = get_testing_sets(s1, sampling_area, extra_area)
@@ -66,9 +66,9 @@ get_rmse = function(mods, testing_sets){
 get_rmse(ms_baseline, testing_sets)
 
 get_rmse_cv = function(mods){
-  random_rmse = global_validation(random_mod)["RMSE"]
-  inter_rmse = global_validation(inter_mod)["RMSE"]
-  extra_rmse = global_validation(extra_mod)["RMSE"]
+  random_rmse = global_validation(mods[[2]])["RMSE"]
+  inter_rmse = global_validation(mods[[3]])["RMSE"]
+  extra_rmse = global_validation(mods[[4]])["RMSE"]
   return(list(random_rmse, inter_rmse, extra_rmse))
 }
 
