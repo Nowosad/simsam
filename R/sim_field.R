@@ -17,7 +17,7 @@ sim_field = function(rast_grid, seed, range, scenario) {
   cov_mod = gstat::vgm(model = "Sph", psill = 1, range = range, nugget = 0)
   cov_mod = gstat::gstat(formula = z ~ 1, dummy = TRUE, beta = 0,
                          model = cov_mod, nmax = 100)
-  cov_points = quiet(predict(cov_mod, point_grid, nsim = 6))
+  cov_points = quiet(stats::predict(cov_mod, point_grid, nsim = 6))
   cov_points = cbind(as.data.frame(sf::st_coordinates(point_grid)),
                      sf::st_drop_geometry(cov_points))
   cov_stack = terra::rast(cov_points)
@@ -33,7 +33,7 @@ sim_field = function(rast_grid, seed, range, scenario) {
     snoise_mod = gstat::vgm(model = "Sph", psill = 1, range = 25, nugget = 0)
     snoise_mod = gstat::gstat(formula = z ~ 1, dummy = TRUE, beta = 0,
                               model = snoise_mod, nmax = 100)
-    snoise_points = quiet(predict(snoise_mod, point_grid, nsim = 1))
+    snoise_points = quiet(stats::predict(snoise_mod, point_grid, nsim = 1))
     snoise_points = cbind(as.data.frame(sf::st_coordinates(point_grid)),
                           sf::st_drop_geometry(snoise_points))
     snoise = terra::rast(snoise_points)
@@ -46,7 +46,7 @@ sim_field = function(rast_grid, seed, range, scenario) {
     rnoise = terra::rast(ncols = 300, nrows = 100,
                          xmin = 0, xmax = 300,
                          ymin = 0, ymax = 100)
-    vals = rnorm(300 * 100, sd = 1)
+    vals = stats::rnorm(300 * 100, sd = 1)
     rnoise = terra::setValues(rnoise, vals)
     out_rast = out_rast + rnoise
     names(out_rast) = "outcome"

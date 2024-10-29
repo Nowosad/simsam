@@ -1,5 +1,5 @@
 mod_tune = function(train_data, covariates){
-  tune_ctrl = trainControl(method = "oob")
+  tune_ctrl = caret::trainControl(method = "oob")
 
   mtry = round(seq(2, length(covariates), length.out = 5))
   mtry = mtry[!duplicated(mtry)]
@@ -12,9 +12,9 @@ mod_tune = function(train_data, covariates){
 }
 
 mod_cv = function(train_data, covariates, tune_mod, folds) {
-  indxs = CreateSpacetimeFolds(data.frame(ID = folds), spacevar = "ID", k = 5)
+  indxs = CAST::CreateSpacetimeFolds(data.frame(ID = folds), spacevar = "ID", k = 5)
   tgrid = data.frame(mtry = tune_mod$bestTune$mtry, splitrule = "variance", min.node.size = 5)
-  tctrl = trainControl(method = "cv", index = indxs$index, savePredictions = "final")
+  tctrl = caret::trainControl(method = "cv", index = indxs$index, savePredictions = "final")
   tmodl = caret::train(train_data[covariates], train_data[, "outcome"],
                        method = "ranger", importance = "none",
                        num.trees = 100,  trControl = tctrl, tuneGrid = tgrid)

@@ -31,15 +31,15 @@ jitterreg_sample = function(sarea, nsamples, amount) {
   # Simulate regular points, jitter
   res = sf::st_sample(sarea, nsamples, type = "regular")
   res = as.data.frame(sf::st_coordinates(res))
-  res$X2 = res$X + runif(nrow(res), -amount, amount)
-  res$Y2 = res$Y + runif(nrow(res), -amount, amount)
+  res$X2 = res$X + stats::runif(nrow(res), -amount, amount)
+  res$Y2 = res$Y + stats::runif(nrow(res), -amount, amount)
 
   # Ensure they fall within the sampling window, if not try again until they do
   res_sf = sf::st_as_sf(res, coords = c("X2", "Y2"), crs = sf::st_crs(sarea))
   interF = !sf::st_intersects(res_sf, sarea, sparse = FALSE)
   while (any(interF)) {
-    res$X2[interF] = res$X[interF] + runif(sum(interF), -amount, amount)
-    res$Y2[interF] = res$Y[interF] + runif(sum(interF), -amount, amount)
+    res$X2[interF] = res$X[interF] + stats::runif(sum(interF), -amount, amount)
+    res$Y2[interF] = res$Y[interF] + stats::runif(sum(interF), -amount, amount)
     res_sf = sf::st_as_sf(res, coords = c("X2", "Y2"), crs = sf::st_crs(sarea))
     interF = !sf::st_intersects(res_sf, sarea, sparse = FALSE)
   }
