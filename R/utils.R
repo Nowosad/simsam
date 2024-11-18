@@ -1,12 +1,15 @@
-#' Evaluate quietly
-#' @details
-#' Function to hide undesired prints. Copied from:
-#' https://r.789695.n4.nabble.com/Suppressing-output-e-g-from-cat-td859876.html
-#' @param x A function to evaluate.
-#' @examples
-#' # quiet(print("Nothing is shown"))
+#Evaluate quietly
 quiet = function(x) {
   sink(tempfile())
   on.exit(sink())
   invisible(force(x))
+}
+
+is_lonlat = function(rast_grid){
+  result = suppressWarnings(terra::is.lonlat(rast_grid))
+  if (is.na(result) || !result){
+    return(FALSE)
+  } else {
+    return(TRUE)
+  }
 }
