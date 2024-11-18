@@ -2,13 +2,31 @@
 % Please edit documentation in R/sim_field.R
 \name{sim_field}
 \alias{sim_field}
-\title{Title}
+\title{Create a simulated field with covariates and outcome}
 \usage{
-sim_field(rast_grid, range, scenario)
+sim_field(rast_grid, range, scenario, n_covariates = 6)
 }
 \arguments{
-\item{scenario}{}
+\item{rast_grid}{A raster object with the desired dimensions}
+
+\item{range}{The range of the semivariogram}
+
+\item{scenario}{The type of error to add to the outcome: 'autocor' or 'random'}
+
+\item{n_covariates}{The number of covariates to simulate}
+}
+\value{
+A raster object with the simulated field and related covariates
 }
 \description{
-Title
+Create a simulated field with covariates and outcome
+}
+\examples{
+rast_grid = terra::rast(ncols = 300, nrows = 100, xmin = 0, xmax = 300, ymin = 0, ymax = 100)
+sf1 = sim_field(rast_grid, range = 25, scenario = "autocor")
+sf2 = sim_field(rast_grid, range = 50, scenario = "autocor")
+sf3 = sim_field(rast_grid, range = 25, scenario = "random")
+terra::plot(sf1)
+terra::plot(sf2)
+terra::plot(sf3)
 }
