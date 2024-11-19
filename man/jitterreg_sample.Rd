@@ -2,20 +2,17 @@
 % Please edit documentation in R/sam_field.R
 \name{jitterreg_sample}
 \alias{jitterreg_sample}
-\title{Simulates regular samples jittered by an amount of noise.}
+\title{Simulates regular sample jittered by an amount of noise}
 \usage{
-jitterreg_sample(sarea, nsamples, amount)
+jitterreg_sample(x, size, amount)
 }
 \arguments{
-\item{sarea}{sf/sfc polygon where samples will be simulated.}
+\item{x}{sf/sfc polygon where samples will be simulated.}
 
-\item{nsamples}{Integer. Number of samples to simulate.}
+\item{size}{Number of samples to create.}
 
-\item{amount}{Numeric. Amount of jitter to apply.}
+\item{amount}{Amount of jitter to apply.}
 }
 \description{
-Simulates regular samples jittered by an amount of noise.
-}
-\details{
-Simulates regular samples jittered by an amount of noise ~ U(-amount, amount).
+Simulates regular sample jittered by an amount of noise ~ U(-amount, amount).
 }

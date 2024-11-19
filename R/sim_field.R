@@ -20,7 +20,7 @@ sim_field = function(rast_grid, range, scenario, n_covariates = 6) {
 
   rast_grid_coords = terra::crds(rast_grid, df = TRUE)
 
-  # Simulate 6 covariates from a semivariogram and stack
+  # Simulate covariates from a semivariogram and stack
   cov_mod = gstat::vgm(model = "Sph", psill = 1, range = range, nugget = 0)
   cov_mod = gstat::gstat(formula = z ~ 1, dummy = TRUE, beta = 0,
                          model = cov_mod, nmax = 100, locations = ~x + y)

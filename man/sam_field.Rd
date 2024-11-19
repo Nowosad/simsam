@@ -2,19 +2,30 @@
 % Please edit documentation in R/sam_field.R
 \name{sam_field}
 \alias{sam_field}
-\title{Sample simulation}
+\title{Sample spatial field}
 \usage{
-sam_field(sarea, nsamples, dsamples)
+sam_field(x, size, type, amount, nclusters, radius)
 }
 \arguments{
-\item{nsamples}{Integer. Number of samples to simulate.}
+\item{x}{Any object that can be coerced to an sf object.}
 
-\item{dsamples}{Character. Spatial distribution of the samples. 5 are
-possible: sregular, wregular, random, wclust, sclust.}
+\item{size}{Number of samples to create.}
+
+\item{type}{Expected spatial distribution of the samples. Possible values are:
+\code{"jittered"}, \code{"random"}, \code{"clust"}.}
+
+\item{amount}{Amount of jitter to apply to the samples (in map units). Only used when \code{type = "jittered"}.}
+
+\item{nclusters}{Number of clusters to simulate. Only used when \code{type = "clust"}.}
+
+\item{radius}{Radius of the buffer around each cluster. Only used when \code{type = "clust"}.}
 }
 \description{
-Sample simulation
+Create a sample of a spatial field.
 }
-\details{
-Simulates a series of sampling points for simulation problem 1.
+\examples{
+rast_grid = terra::rast(ncols = 300, nrows = 100, xmin = 0, xmax = 300, ymin = 0, ymax = 100)
+sam_field(rast_grid, 100, "jittered", 5)
+vect_grid = sf::st_as_sf(terra::as.polygons(rast_grid))
+sam_field(vect_grid, 100, "random")
 }

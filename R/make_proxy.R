@@ -1,3 +1,22 @@
+#' Generate spatial proxies
+#'
+#' This function generates spatial proxies for a given raster object. The function generates three types of proxies: coordinates, Euclidean Distance Fields (EDF), and Oblique Geographic Coordinates (OGC).
+#'
+#' @param rast_grid A raster object with the desired dimensions
+#' @param type The type of proxy to generate. Options are coordinates ("coordinates"), Euclidean Distance Fields ("edf"), and Oblique Geographic Coordinates ("ogc")
+#' @param n The number of angles to use when generating oblique geographic coordinates. Only used when `type = "ogc"`
+#'
+#' @return A SpatRaster object with the generated spatial proxies
+#' @export
+#'
+#' @examples
+#' rast_grid = terra::rast(ncols = 300, nrows = 100, xmin = 0, xmax = 300, ymin = 0, ymax = 100)
+#' proxy_coords = make_proxy(rast_grid, "coordinates")
+#' proxy_edf = make_proxy(rast_grid, "edf")
+#' proxy_ogc = make_proxy(rast_grid, "ogc", 5)
+#' terra::plot(proxy_coords)
+#' terra::plot(proxy_edf)
+#' terra::plot(proxy_ogc)
 make_proxy = function(rast_grid, type, n){
   if(type == "coordinates"){
     return(proxy_coordinates(rast_grid))
@@ -57,7 +76,7 @@ proxy_ogc = function(rast_grid, n){
   }
 
   proxy_ogc_stack = terra::rast(proxy_ogc_stack)
-  proxy_ogc_stack = terra::mask(proxy_ogc_stack, rast_grid)
+  # proxy_ogc_stack = terra::mask(proxy_ogc_stack, rast_grid) # to mask or not to mask?
   names(proxy_ogc_stack) = paste0("Angle_", angles * 180 / pi)
   return(proxy_ogc_stack)
 }

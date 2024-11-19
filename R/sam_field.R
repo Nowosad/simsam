@@ -1,80 +1,91 @@
-#' Sample simulation
-#' @details
-#' Simulates a series of sampling points for simulation problem 1.
-#' @param nsamples Integer. Number of samples to simulate.
-#' @param dsamples Character. Spatial distribution of the samples. 5 are
-#' possible: sregular, wregular, random, wclust, sclust.
+#' Sample spatial field
+#'
+#' Create a sample of a spatial field.
+#'
+#' @param x Any object that can be coerced to an sf object.
+#' @param size Number of samples to create.
+#' @param type Expected spatial distribution of the samples. Possible values are:
+#' `"jittered"`, `"random"`, `"clust"`.
+#' @param amount Amount of jitter to apply to the samples (in map units). Only used when `type = "jittered"`.
+#' @param nclusters Number of clusters to simulate. Only used when `type = "clust"`.
+#' @param radius Radius of the buffer around each cluster. Only used when `type = "clust"`.
+
 #' @export
-sam_field = function(sarea, nsamples, dsamples) {
-  # sarea = sf::st_as_sf(terra::as.polygons(terra::ext(rast_grid)))
-  if (dsamples == "sregular") {
-    simpoints = jitterreg_sample(sarea, nsamples, 2)
-  } else if (dsamples == "wregular") {
-    simpoints = jitterreg_sample(sarea, nsamples, 5)
-  } else if (dsamples == "random") {
-    simpoints = sf::st_sample(sarea, nsamples)
-  } else if (dsamples == "wclust") {
-    simpoints = clustered_sample(sarea, nsamples, 25, 8)
-  } else if (dsamples == "sclust") {
-    simpoints = clustered_sample(sarea, nsamples, 10, 6)
+#'
+#' @examples
+#' rast_grid = terra::rast(ncols = 300, nrows = 100, xmin = 0, xmax = 300, ymin = 0, ymax = 100)
+#' sam_field(rast_grid, 100, "jittered", 5)
+#' vect_grid = sf::st_as_sf(terra::as.polygons(rast_grid))
+#' sam_field(vect_grid, 100, "random")
+sam_field = function(x, size, type, amount, nclusters, radius) {
+  if (!inherits(x, "sf") || !(sf::st_geometry_type(x, by_geometry = FALSE) %in% c("POLYGON", "MULTIPOLYGON"))) {
+    x = sf::st_as_sf(terra::as.polygons(terra::ext(x)))
+  }
+  if (type == "jittered") {
+    simpoints = jitterreg_sample(x, size, amount)
+  } else if (type == "random") {
+    simpoints = sf::st_sample(x, size)
+  } else if (type == "clust") {
+    simpoints = clustered_sample(x, size, nclusters, radius)
   }
   simpoints = sf::st_sf(geometry = simpoints)
   return(simpoints)
 }
 
-#' Simulates regular samples jittered by an amount of noise.
-#' @details
-#' Simulates regular samples jittered by an amount of noise ~ U(-amount, amount).
-#' @param sarea sf/sfc polygon where samples will be simulated.
-#' @param nsamples Integer. Number of samples to simulate.
-#' @param amount Numeric. Amount of jitter to apply.
-jitterreg_sample = function(sarea, nsamples, amount) {
+#' Simulates regular sample jittered by an amount of noise
+#'
+#' Simulates regular sample jittered by an amount of noise ~ U(-amount, amount).
+#'
+#' @param x sf/sfc polygon where samples will be simulated.
+#' @param size Number of samples to create.
+#' @param amount Amount of jitter to apply.
+jitterreg_sample = function(x, size, amount) {
   # Simulate regular points, jitter
-  res = sf::st_sample(sarea, nsamples, type = "regular")
+  res = sf::st_sample(x, size, type = "regular")
   res = as.data.frame(sf::st_coordinates(res))
   res$X2 = res$X + stats::runif(nrow(res), -amount, amount)
   res$Y2 = res$Y + stats::runif(nrow(res), -amount, amount)
 
   # Ensure they fall within the sampling window, if not try again until they do
-  res_sf = sf::st_as_sf(res, coords = c("X2", "Y2"), crs = sf::st_crs(sarea))
-  interF = !sf::st_intersects(res_sf, sarea, sparse = FALSE)
+  res_sf = sf::st_as_sf(res, coords = c("X2", "Y2"), crs = sf::st_crs(x))
+  interF = !sf::st_intersects(res_sf, x, sparse = FALSE)
   while (any(interF)) {
     res$X2[interF] = res$X[interF] + stats::runif(sum(interF), -amount, amount)
     res$Y2[interF] = res$Y[interF] + stats::runif(sum(interF), -amount, amount)
-    res_sf = sf::st_as_sf(res, coords = c("X2", "Y2"), crs = sf::st_crs(sarea))
-    interF = !sf::st_intersects(res_sf, sarea, sparse = FALSE)
+    res_sf = sf::st_as_sf(res, coords = c("X2", "Y2"), crs = sf::st_crs(x))
+    interF = !sf::st_intersects(res_sf, x, sparse = FALSE)
   }
 
-  # Convert to geometries
   res$X = NULL
   res$Y = NULL
-  res = sf::st_as_sf(res, coords = c("X2", "Y2"), crs = sf::st_crs(sarea))
+  res = sf::st_as_sf(res, coords = c("X2", "Y2"), crs = sf::st_crs(x))
   res
 }
 
-#' Simulates clustered samples.
-#' @details
+#' Simulates clustered samples
+#'
 #' Simulates clustered samples by simulating a number of randomly sampled
-#' parents, and then randomly simulate children within a buffer of the parents.
-#' @param sarea sf/sfc polygon where samples will be simulated.
-#' @param nsamples Integer. Number of samples to simulate.
-#' @param nparents Integer. Number of parents to simulate.
-#' @param radius Numeric. Radius of the buffer for children simulation.
-clustered_sample = function(sarea, nsamples, nparents, radius) {
-  # Number of offspring per parent
-  nchildren = round((nsamples - nparents) / nparents, 0)
+#' clusters, and then randomly simulate points within a buffer of the clusters.
+#'
+#' @param x sf/sfc polygon where samples will be simulated.
+#' @param size Number of samples to create.
+#' @param nclusters Number of clusters to simulate.
+#' @param radius Radius of the buffer for intra-cluster simulation.
+clustered_sample = function(x, size, nclusters, radius) {
+  # Number of points per cluster
+  nchildren = round((size - nclusters) / nclusters, 0)
 
-  # Simulate parents
-  parents = sf::st_sf(geometry = sf::st_sample(sarea, nparents, type = "random"))
+  # Simulate clusters
+  parents = sf::st_sf(geometry = sf::st_sample(x, nclusters, type = "random"))
   res = parents
 
-  # Simulate offspring
+  # Simulate points per cluster
   for (i in 1:nrow(parents)) {
     # Generate buffer and cut parts outside of the area of study
     buf = sf::st_buffer(parents[i, ], dist = radius)
-    buf = sf::st_intersection(buf, sarea)
+    buf = sf::st_intersection(buf, x)
 
-    # Simulate children
+    # Simulate points
     children = sf::st_sf(geometry = sf::st_sample(buf, nchildren, type = "random"))
     res = rbind(res, children)
   }

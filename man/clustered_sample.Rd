@@ -2,23 +2,20 @@
 % Please edit documentation in R/sam_field.R
 \name{clustered_sample}
 \alias{clustered_sample}
-\title{Simulates clustered samples.}
+\title{Simulates clustered samples}
 \usage{
-clustered_sample(sarea, nsamples, nparents, radius)
+clustered_sample(x, size, nclusters, radius)
 }
 \arguments{
-\item{sarea}{sf/sfc polygon where samples will be simulated.}
+\item{x}{sf/sfc polygon where samples will be simulated.}
 
-\item{nsamples}{Integer. Number of samples to simulate.}
+\item{size}{Number of samples to create.}
 
-\item{nparents}{Integer. Number of parents to simulate.}
+\item{nclusters}{Number of clusters to simulate.}
 
-\item{radius}{Numeric. Radius of the buffer for children simulation.}
+\item{radius}{Radius of the buffer for intra-cluster simulation.}
 }
 \description{
-Simulates clustered samples.
-}
-\details{
 Simulates clustered samples by simulating a number of randomly sampled
-parents, and then randomly simulate children within a buffer of the parents.
+clusters, and then randomly simulate points within a buffer of the clusters.
 }
