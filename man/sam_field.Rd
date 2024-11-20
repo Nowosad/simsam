@@ -4,7 +4,7 @@
 \alias{sam_field}
 \title{Sample spatial field}
 \usage{
-sam_field(x, size, type, amount, nclusters, radius)
+sam_field(x, size, type, value, nclusters)
 }
 \arguments{
 \item{x}{Any object that can be coerced to an sf object.}
@@ -14,11 +14,10 @@ sam_field(x, size, type, amount, nclusters, radius)
 \item{type}{Expected spatial distribution of the samples. Possible values are:
 \code{"jittered"}, \code{"random"}, \code{"clust"}.}
 
-\item{amount}{Amount of jitter to apply to the samples (in map units). Only used when \code{type = "jittered"}.}
+\item{value}{Amount of jitter to apply to the samples (in map units; only used when \code{type = "jittered"})
+or radius of the buffer around each cluster (only used when \code{type = "clust"}).}
 
 \item{nclusters}{Number of clusters to simulate. Only used when \code{type = "clust"}.}
-
-\item{radius}{Radius of the buffer around each cluster. Only used when \code{type = "clust"}.}
 }
 \description{
 Create a sample of a spatial field.

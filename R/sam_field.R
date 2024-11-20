@@ -6,9 +6,9 @@
 #' @param size Number of samples to create.
 #' @param type Expected spatial distribution of the samples. Possible values are:
 #' `"jittered"`, `"random"`, `"clust"`.
-#' @param amount Amount of jitter to apply to the samples (in map units). Only used when `type = "jittered"`.
+#' @param value Amount of jitter to apply to the samples (in map units; only used when `type = "jittered"`)
+#' or radius of the buffer around each cluster (only used when `type = "clust"`).
 #' @param nclusters Number of clusters to simulate. Only used when `type = "clust"`.
-#' @param radius Radius of the buffer around each cluster. Only used when `type = "clust"`.
 
 #' @export
 #'
@@ -17,16 +17,16 @@
 #' sam_field(rast_grid, 100, "jittered", 5)
 #' vect_grid = sf::st_as_sf(terra::as.polygons(rast_grid))
 #' sam_field(vect_grid, 100, "random")
-sam_field = function(x, size, type, amount, nclusters, radius) {
+sam_field = function(x, size, type, value, nclusters) {
   if (!inherits(x, "sf") || !(sf::st_geometry_type(x, by_geometry = FALSE) %in% c("POLYGON", "MULTIPOLYGON"))) {
     x = sf::st_as_sf(terra::as.polygons(terra::ext(x)))
   }
   if (type == "jittered") {
-    simpoints = jitterreg_sample(x, size, amount)
+    simpoints = jitterreg_sample(x, size, value)
   } else if (type == "random") {
     simpoints = sf::st_sample(x, size)
   } else if (type == "clust") {
-    simpoints = clustered_sample(x, size, nclusters, radius)
+    simpoints = clustered_sample(x, size, nclusters, value)
   }
   simpoints = sf::st_sf(geometry = simpoints)
   return(simpoints)
@@ -73,20 +73,20 @@ jitterreg_sample = function(x, size, amount) {
 #' @param radius Radius of the buffer for intra-cluster simulation.
 clustered_sample = function(x, size, nclusters, radius) {
   # Number of points per cluster
-  nchildren = round((size - nclusters) / nclusters, 0)
+  npcluster = round((size - nclusters) / nclusters, 0)
 
   # Simulate clusters
-  parents = sf::st_sf(geometry = sf::st_sample(x, nclusters, type = "random"))
-  res = parents
+  clusters = sf::st_sf(geometry = sf::st_sample(x, nclusters, type = "random"))
+  res = clusters
 
   # Simulate points per cluster
-  for (i in 1:nrow(parents)) {
+  for (i in 1:nrow(clusters)) {
     # Generate buffer and cut parts outside of the area of study
-    buf = sf::st_buffer(parents[i, ], dist = radius)
+    buf = sf::st_buffer(clusters[i, ], dist = radius)
     buf = sf::st_intersection(buf, x)
 
     # Simulate points
-    children = sf::st_sf(geometry = sf::st_sample(buf, nchildren, type = "random"))
+    children = sf::st_sf(geometry = sf::st_sample(buf, npcluster, type = "random"))
     res = rbind(res, children)
   }
 
