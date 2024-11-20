@@ -14,3 +14,4 @@ Imports:
   terra,
   sf
 Suggests: tinytest
+Config/Needs/website: rmarkdown
