@@ -1,0 +1,17 @@
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/LICENSE-text.html</loc></url>
+<url><loc>/LICENSE.html</loc></url>
+<url><loc>/articles/Simulating-creating-spatial-proxies-and-sampling.html</loc></url>
+<url><loc>/articles/index.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/reference/clustered_sample.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/jitterreg_sample.html</loc></url>
+<url><loc>/reference/make_proxy.html</loc></url>
+<url><loc>/reference/sam_field.html</loc></url>
+<url><loc>/reference/sim_field.html</loc></url>
+<url><loc>/reference/simsam-package.html</loc></url>
+</urlset>
+
