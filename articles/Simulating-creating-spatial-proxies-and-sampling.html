@@ -70,7 +70,7 @@
       <h1 data-toc-skip>Simulating, creating spatial proxies, and sampling</h1>
                         <h4 data-toc-skip class="author">Jakub Nowosad</h4>
             
-            <h4 data-toc-skip class="date">2024-11-20</h4>
+            <h4 data-toc-skip class="date">2024-11-21</h4>
       
 
       <div class="hidden name"><code>Simulating-creating-spatial-proxies-and-sampling.Rmd</code></div>
@@ -135,11 +135,11 @@
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sample_r</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Simulating-creating-spatial-proxies-and-sampling_files/figure-html/unnamed-chunk-6-3.png" width="700"></p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sample_c1</span> <span class="op">=</span> <span class="fu"><a href="../reference/sam_field.html">sam_field</a></span><span class="op">(</span><span class="va">rast_grid</span>, <span class="fl">100</span>, <span class="st">"clust"</span>, nclusters <span class="op">=</span> <span class="fl">5</span>, value <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">sample_c1</span> <span class="op">=</span> <span class="fu"><a href="../reference/sam_field.html">sam_field</a></span><span class="op">(</span><span class="va">rast_grid</span>, <span class="fl">100</span>, <span class="st">"clustered"</span>, nclusters <span class="op">=</span> <span class="fl">5</span>, value <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sample_c1</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Simulating-creating-spatial-proxies-and-sampling_files/figure-html/unnamed-chunk-6-4.png" width="700"></p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sample_c2</span> <span class="op">=</span> <span class="fu"><a href="../reference/sam_field.html">sam_field</a></span><span class="op">(</span><span class="va">rast_grid</span>, <span class="fl">100</span>, <span class="st">"clust"</span>, nclusters <span class="op">=</span> <span class="fl">5</span>, value <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">sample_c2</span> <span class="op">=</span> <span class="fu"><a href="../reference/sam_field.html">sam_field</a></span><span class="op">(</span><span class="va">rast_grid</span>, <span class="fl">100</span>, <span class="st">"clustered"</span>, nclusters <span class="op">=</span> <span class="fl">5</span>, value <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sample_c2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Simulating-creating-spatial-proxies-and-sampling_files/figure-html/unnamed-chunk-6-5.png" width="700"></p>
 </div>
