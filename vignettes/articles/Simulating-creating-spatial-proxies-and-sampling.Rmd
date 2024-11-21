@@ -58,9 +58,9 @@ sample_j2 = sam_field(rast_grid, 100, "jittered", 20)
 plot(sample_j2)
 sample_r = sam_field(rast_grid, 100, "random")
 plot(sample_r)
-sample_c1 = sam_field(rast_grid, 100, "clust", nclusters = 5, value = 10)
+sample_c1 = sam_field(rast_grid, 100, "clustered", nclusters = 5, value = 10)
 plot(sample_c1)
-sample_c2 = sam_field(rast_grid, 100, "clust", nclusters = 5, value = 20)
+sample_c2 = sam_field(rast_grid, 100, "clustered", nclusters = 5, value = 20)
 plot(sample_c2)
 ```
 
