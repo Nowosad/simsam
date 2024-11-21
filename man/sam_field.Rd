@@ -12,12 +12,12 @@ sam_field(x, size, type, value, nclusters)
 \item{size}{Number of samples to create.}
 
 \item{type}{Expected spatial distribution of the samples. Possible values are:
-\code{"jittered"}, \code{"random"}, \code{"clust"}.}
+\code{"jittered"}, \code{"random"}, \code{"clustered"}.}
 
 \item{value}{Amount of jitter to apply to the samples (in map units; only used when \code{type = "jittered"})
-or radius of the buffer around each cluster (only used when \code{type = "clust"}).}
+or radius of the buffer around each cluster (only used when \code{type = "clustered"}).}
 
-\item{nclusters}{Number of clusters to simulate. Only used when \code{type = "clust"}.}
+\item{nclusters}{Number of clusters to simulate. Only used when \code{type = "clustered"}.}
 }
 \description{
 Create a sample of a spatial field.

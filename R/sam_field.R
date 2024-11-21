@@ -5,10 +5,10 @@
 #' @param x Any object that can be coerced to an sf object.
 #' @param size Number of samples to create.
 #' @param type Expected spatial distribution of the samples. Possible values are:
-#' `"jittered"`, `"random"`, `"clust"`.
+#' `"jittered"`, `"random"`, `"clustered"`.
 #' @param value Amount of jitter to apply to the samples (in map units; only used when `type = "jittered"`)
-#' or radius of the buffer around each cluster (only used when `type = "clust"`).
-#' @param nclusters Number of clusters to simulate. Only used when `type = "clust"`.
+#' or radius of the buffer around each cluster (only used when `type = "clustered"`).
+#' @param nclusters Number of clusters to simulate. Only used when `type = "clustered"`.
 
 #' @export
 #'
@@ -25,7 +25,7 @@ sam_field = function(x, size, type, value, nclusters) {
     simpoints = jitterreg_sample(x, size, value)
   } else if (type == "random") {
     simpoints = sf::st_sample(x, size)
-  } else if (type == "clust") {
+  } else if (type == "clustered") {
     simpoints = clustered_sample(x, size, nclusters, value)
   }
   simpoints = sf::st_sf(geometry = simpoints)
