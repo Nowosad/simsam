@@ -33,3 +33,8 @@ terra::plot(proxy_coords)
 terra::plot(proxy_edf)
 terra::plot(proxy_ogc)
 }
+\references{
+Behrens, T., Schmidt, K., Viscarra Rossel, R. A., Gries, P., Scholten, T., & MacMillan, R. A. (2018). Spatial modelling with Euclidean distance fields and machine learning. European journal of soil science, 69(5), 757-770.
+
+Møller, A. B., Beucher, A. M., Pouladi, N., & Greve, M. H. (2020). Oblique geographic coordinates as covariates for digital soil mapping. Soil, 6(2), 269-289.
+}

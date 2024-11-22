@@ -8,6 +8,9 @@
 #' @param type The type of proxy to generate. Options are coordinates ("coordinates"), Euclidean Distance Fields ("edf"), and Oblique Geographic Coordinates ("ogc")
 #' @param n The number of angles to use when generating oblique geographic coordinates. Only used when `type = "ogc"`
 #'
+#' @references Behrens, T., Schmidt, K., Viscarra Rossel, R. A., Gries, P., Scholten, T., & MacMillan, R. A. (2018). Spatial modelling with Euclidean distance fields and machine learning. European journal of soil science, 69(5), 757-770.
+#' @references Møller, A. B., Beucher, A. M., Pouladi, N., & Greve, M. H. (2020). Oblique geographic coordinates as covariates for digital soil mapping. Soil, 6(2), 269-289.
+#'
 #' @return A SpatRaster object with the generated spatial proxies
 #' @export
 #'
