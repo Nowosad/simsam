@@ -2,9 +2,12 @@
 % Please edit documentation in R/make_proxy.R
 \name{make_proxy}
 \alias{make_proxy}
+\alias{add_proxy}
 \title{Generate spatial proxies}
 \usage{
 make_proxy(rast_grid, type, n)
+
+add_proxy(rast_grid, type, n)
 }
 \arguments{
 \item{rast_grid}{A raster object with the desired dimensions}
@@ -17,7 +20,9 @@ make_proxy(rast_grid, type, n)
 A SpatRaster object with the generated spatial proxies
 }
 \description{
-This function generates spatial proxies for a given raster object. The function generates three types of proxies: coordinates, Euclidean Distance Fields (EDF), and Oblique Geographic Coordinates (OGC).
+The \code{make_proxy()} function generates spatial proxies for a given raster object.
+It generates three types of proxies: coordinates, Euclidean Distance Fields (EDF), and Oblique Geographic Coordinates (OGC).
+Additionally, the \code{add_proxy()} function can be used to add a proxy to an existing raster object.
 }
 \examples{
 rast_grid = terra::rast(ncols = 300, nrows = 100, xmin = 0, xmax = 300, ymin = 0, ymax = 100)

@@ -1,6 +1,8 @@
 #' Generate spatial proxies
 #'
-#' This function generates spatial proxies for a given raster object. The function generates three types of proxies: coordinates, Euclidean Distance Fields (EDF), and Oblique Geographic Coordinates (OGC).
+#' The `make_proxy()` function generates spatial proxies for a given raster object.
+#' It generates three types of proxies: coordinates, Euclidean Distance Fields (EDF), and Oblique Geographic Coordinates (OGC).
+#' Additionally, the `add_proxy()` function can be used to add a proxy to an existing raster object.
 #'
 #' @param rast_grid A raster object with the desired dimensions
 #' @param type The type of proxy to generate. Options are coordinates ("coordinates"), Euclidean Distance Fields ("edf"), and Oblique Geographic Coordinates ("ogc")
@@ -25,6 +27,10 @@ make_proxy = function(rast_grid, type, n){
   } else if(type == "ogc"){
     return(proxy_ogc(rast_grid, n))
   }
+}
+#' @rdname make_proxy
+add_proxy = function(rast_grid, type, n){
+  c(rast_grid, make_proxy(rast_grid, type, n))
 }
 
 proxy_coordinates = function(rast_grid){
