@@ -31,6 +31,7 @@ make_proxy = function(rast_grid, type, n){
     return(proxy_ogc(rast_grid, n))
   }
 }
+#' @export
 #' @rdname make_proxy
 add_proxy = function(rast_grid, type, n){
   c(rast_grid, make_proxy(rast_grid, type, n))
