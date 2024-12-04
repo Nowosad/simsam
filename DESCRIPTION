@@ -1,5 +1,5 @@
 Package: simsam
-Title: What the Package Does (One Line, Title Case)
+Title: Simulating and Sampling Spatial Data
 Version: 0.0.1
 Authors@R: c(
     person(given = "Jakub", family = "Nowosad", 
@@ -8,7 +8,8 @@ Authors@R: c(
     comment = c(ORCID = "0000-0002-1057-3721")),
     person(given = "Carles", family = "Milà", role = c("ctb"))
     )
-Description: What the package does (one paragraph).
+Description: Provides tools to simulate and sample spatial data.
+    Additional tools for creating various spatial proxies are also included.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

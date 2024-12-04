@@ -4,9 +4,9 @@
 \name{simsam-package}
 \alias{simsam}
 \alias{simsam-package}
-\title{simsam: What the Package Does (One Line, Title Case)}
+\title{simsam: Simulating and Sampling Spatial Data}
 \description{
-What the package does (one paragraph).
+Provides tools to simulate and sample spatial data. Additional tools for creating various spatial proxies are also included.
 }
 \author{
 \strong{Maintainer}: Jakub Nowosad \email{nowosad.jakub@gmail.com} (\href{https://orcid.org/0000-0002-1057-3721}{ORCID})
