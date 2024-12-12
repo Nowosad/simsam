@@ -4,6 +4,8 @@ generate_outcome = function(formula, cov_grid){
   return(output_raster)
 }
 
+# idea: option to add used covariates to the raster (piping)
+
 # rast_grid = terra::rast(ncols = 300, nrows = 100, xmin = 0, xmax = 300, ymin = 0, ymax = 100)
 # sf1 = sim_covariates(rast_grid, range = 25)
 # g = generate_outcome(y ~ cov1 + cov4, sf1)
