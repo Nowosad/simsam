@@ -1,13 +1,19 @@
 generate_outcome = function(formula, cov_grid){
-  formula_function = function(...) {
-    eval(parse(text = formula))
-  }
-
-  output_raster = formula_function(cov_grid)
-
+  f = as_function(formula)
+  output_raster = terra::lapp(cov_grid, f, usenames = TRUE)
   return(output_raster)
 }
 
-rast_grid = terra::rast(ncols = 300, nrows = 100, xmin = 0, xmax = 300, ymin = 0, ymax = 100)
-sf1 = sim_covariates(rast_grid, range = 25)
-generate_outcome("~cov1 + cov2", sf1)
+# rast_grid = terra::rast(ncols = 300, nrows = 100, xmin = 0, xmax = 300, ymin = 0, ymax = 100)
+# sf1 = sim_covariates(rast_grid, range = 25)
+# g = generate_outcome(y ~ cov1 + cov4, sf1)
+#
+# terra::plot(g)
+# terra::plot(sf1[[1]] + sf1[[4]])
+
+# https://stackoverflow.com/a/36680963 by https://stackoverflow.com/users/601303/thilo
+as_function = function(formula) {
+    cmd = tail(as.character(formula), 1)
+    exp = parse(text = cmd)
+    function(...) eval(exp, list(...))
+}
