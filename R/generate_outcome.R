@@ -1,6 +1,17 @@
-generate_outcome = function(formula, cov_grid){
+#' Title
+#'
+#' @param formula
+#' @param cov_grid
+#'
+#' @return
+#' @export
+#'
+#' @examples
+blend_rasters = function(cov_grid, formula, ...){
+  cov_grid = c(cov_grid, ...)
   f = as_function(formula)
   output_raster = terra::lapp(cov_grid, f, usenames = TRUE)
+  names(output_raster) = "outcome"
   return(output_raster)
 }
 

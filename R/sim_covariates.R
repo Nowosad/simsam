@@ -1,3 +1,14 @@
+#' Title
+#'
+#' @param rast_grid
+#' @param vgm
+#' @param n
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
 sim_covariates = function(rast_grid, vgm = NULL, n = 6, ...){
 
   additional_args = list(...)
@@ -7,7 +18,7 @@ sim_covariates = function(rast_grid, vgm = NULL, n = 6, ...){
     cov_mod = vgm
   } else {
     cov_mod = gstat::vgm(model = check_args("model", additional_args, ifnotfound = "Sph"),
-                         psill = check_args("psill", additional_args, ifnotfound = 1), 
+                         psill = check_args("psill", additional_args, ifnotfound = 1),
                          range = check_args("range", additional_args, ifnotfound = stop("range must be provided")),
                          nugget = check_args("nugget", additional_args, ifnotfound = 0))
   }
@@ -17,7 +28,8 @@ sim_covariates = function(rast_grid, vgm = NULL, n = 6, ...){
 
   cov_mod = gstat::gstat(formula = z ~ 1, dummy = TRUE, beta = beta,
                          model = cov_mod, nmax = nmax, locations = ~x + y)
-  cov_stack = quiet(stats::predict(cov_mod, rast_grid_coords, nsim = n))
+  cov_stack = quiet(stats::predict(cov_mod, rast_grid_coords, nsim = n,
+                                   indicators = check_args("indicators", additional_args, ifnotfound = 0)))
   cov_stack = terra::rast(cov_stack)
   names(cov_stack) = paste0("cov", seq_len(n))
   return(cov_stack)

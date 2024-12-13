@@ -1,0 +1,70 @@
+---
+title: "Simulating, creating spatial proxies, and sampling"
+author: Jakub Nowosad
+date: "`r Sys.Date()`"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(simsam)
+library(terra)
+set.seed(2024-12-13)
+```
+
+```{r}
+rast_grid = terra::rast(ncols = 200, nrows = 200, 
+                        xmin = 0, xmax = 200, ymin = 0, ymax = 200)
+```
+
+## Simulate
+
+```{r}
+covariates_one = simsam::sim_covariates(rast_grid, range = 10, n = 4)
+terra::plot(covariates_one, nr = 1)
+```
+
+```{r}
+covariates_two = simsam::sim_covariates(rast_grid, vgm = gstat::vgm(model = "Exp", psill = 1, range = 10), n = 4)
+terra::plot(covariates_two, nr = 1)
+```
+
+```{r}
+covariates_three = simsam::sim_covariates(rast_grid, vgm = gstat::vgm(model = "Nug", psill = 1, range = 0), n = 4)
+terra::plot(covariates_three, nr = 1)
+```
+
+```{r}
+covariates_four = simsam::sim_covariates(rast_grid, vgm = gstat::vgm(model = "Sph", psill = 10, range = 100), n = 1,
+                                         beta = 30, indicators = TRUE)
+terra::plot(covariates_four, nr = 1)
+```
+
+## Blend
+
+```{r}
+outcome_one = simsam::blend_rasters(covariates_one, ~ cov1 + cov2 + cov3 + cov4)
+terra::plot(outcome_one)
+```
+
+```{r}
+outcome_two = simsam::blend_rasters(outcome_one, ~ outcome + cov1, covariates_three)
+terra::plot(outcome_two)
+```
+
+```{r}
+outcome_three = simsam::blend_rasters(outcome_one, ~ outcome * (cov1 + 0.2), covariates_four)
+terra::plot(outcome_three)
+```
+
+```{r}
+outcome_four = simsam::blend_rasters(covariates_two, ~ cov1 + cov2 * cov3 + cov4) |>
+  simsam::blend_rasters(~ outcome * (cov1 + 0.2), covariates_four)
+terra::plot(outcome_four)
+```
+
