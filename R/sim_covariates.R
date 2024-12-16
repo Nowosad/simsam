@@ -16,13 +16,13 @@
 #' sf2 = sim_covariates(rast_grid, range = 50, n = 4)
 #' sf3 = sim_covariates(rast_grid, range = 25,
 #'   vgm = gstat::vgm(model = "Nug", psill = 2, range = 0), n = 4)
-#' sf4 = sim_covariates(rast_grid, range = 25,
-#'   vgm = gstat::vgm(model = "Exp", psill = 10, range = 100), n = 1,
-#'   beta = 30, indicators = TRUE)
+#' #sf4 = sim_covariates(rast_grid, range = 25,
+#' #  vgm = gstat::vgm(model = "Exp", psill = 10, range = 100), n = 1,
+#' #   beta = 30, indicators = TRUE)
 #' terra::plot(sf1)
 #' terra::plot(sf2)
 #' terra::plot(sf3)
-#' terra::plot(sf4)
+#' #terra::plot(sf4)
 sim_covariates = function(rast_grid, vgm = NULL, n = 6, ...){
 
   additional_args = list(...)
