@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simsam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.2</span>
       </span>
     </div>
 
@@ -32,6 +32,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
+      <a href="../articles/Covariates_and_outcomes.html">Simulating, creating spatial proxies, and sampling</a>
+    </li>
+    <li>
       <a href="../articles/Simulating-creating-spatial-proxies-and-sampling.html">Simulating, creating spatial proxies, and sampling</a>
     </li>
   </ul></li>
@@ -88,42 +91,42 @@ or radius of the buffer around each cluster (only used when <code>type = "cluste
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">rast_grid</span> <span class="op">=</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span>ncols <span class="op">=</span> <span class="fl">300</span>, nrows <span class="op">=</span> <span class="fl">100</span>, xmin <span class="op">=</span> <span class="fl">0</span>, xmax <span class="op">=</span> <span class="fl">300</span>, ymin <span class="op">=</span> <span class="fl">0</span>, ymax <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">sam_field</span><span class="op">(</span><span class="va">rast_grid</span>, <span class="fl">100</span>, <span class="st">"jittered"</span>, <span class="fl">5</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 85 features and 0 fields</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 102 features and 0 fields</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: POINT</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: 6.371558 ymin: 9.430832 xmax: 283.3544 ymax: 88.38453</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: 4.575156 ymin: 1.426493 xmax: 290.5832 ymax: 95.96098</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> CRS:           NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> First 10 features:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                     geometry</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    POINT (7.912142 11.283)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  POINT (20.79713 15.86894)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  POINT (36.61954 9.737413)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  POINT (58.52999 19.12196)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  POINT (76.16434 10.64163)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  POINT (91.40475 14.33684)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7  POINT (113.1564 17.61247)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8  POINT (130.8733 16.33397)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9  POINT (149.2146 11.56441)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 POINT (159.5385 14.62171)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  POINT (11.99474 9.452778)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   POINT (28.62934 2.17644)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  POINT (47.43516 9.371897)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  POINT (65.45125 6.880784)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  POINT (75.86688 7.496997)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  POINT (92.06279 1.426493)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  POINT (116.5132 2.834731)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8   POINT (132.5159 5.77446)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  POINT (146.3349 4.946061)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 POINT (165.9785 5.642068)</span>
 <span class="r-in"><span><span class="va">vect_grid</span> <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/as.polygons.html" class="external-link">as.polygons</a></span><span class="op">(</span><span class="va">rast_grid</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">sam_field</span><span class="op">(</span><span class="va">vect_grid</span>, <span class="fl">100</span>, <span class="st">"random"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 100 features and 0 fields</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: POINT</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: 1.348892 ymin: 1.476902 xmax: 299.8957 ymax: 98.65087</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: 7.908395 ymin: 0.1282007 xmax: 299.7641 ymax: 99.72685</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> CRS:           NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> First 10 features:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     geometry</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  POINT (1.348892 19.62195)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  POINT (283.0549 96.86375)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  POINT (131.4412 38.70963)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   POINT (225.181 65.03439)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  POINT (200.3447 81.45962)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   POINT (122.392 7.096477)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7  POINT (105.3746 52.68303)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8  POINT (221.4275 76.34748)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9  POINT (199.2856 43.53866)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 POINT (25.56741 55.24723)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                      geometry</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  POINT (162.3778 0.4254061)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   POINT (45.63812 83.69969)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   POINT (80.12272 73.79278)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   POINT (104.1432 52.94601)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   POINT (234.9126 81.66921)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   POINT (148.0076 88.95134)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   POINT (106.5087 88.56185)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8    POINT (145.5317 75.1999)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9   POINT (168.9068 75.34847)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10   POINT (179.628 19.01968)</span>
 </code></pre></div>
     </div>
   </div>
