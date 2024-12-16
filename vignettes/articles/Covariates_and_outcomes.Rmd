@@ -1,5 +1,5 @@
 ---
-title: "Simulating, creating spatial proxies, and sampling"
+title: "Simulating covariates and outcomes"
 author: Jakub Nowosad
 date: "`r Sys.Date()`"
 ---
