@@ -17,8 +17,8 @@ library(terra)
 ```
 
 ```{r}
-rast_grid = terra::rast(ncols = 200, nrows = 200, 
-                        xmin = 0, xmax = 200, ymin = 0, ymax = 200)
+rast_grid = terra::rast(xmin = 0, xmax = 200, ymin = 0, ymax = 200,
+                        ncols = 200, nrows = 200)
 ```
 
 ## Simulate
