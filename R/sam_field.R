@@ -9,7 +9,8 @@
 #' @param value Amount of jitter to apply to the samples (in map units; only used when `type = "jittered"`)
 #' or radius of the buffer around each cluster (only used when `type = "clustered"`).
 #' @param nclusters Number of clusters to simulate. Only used when `type = "clustered"`.
-
+#' @param ... Additional arguments passed to `sf::st_sample()` when `type = "random"`.
+#'
 #' @export
 #'
 #' @examples
@@ -17,14 +18,14 @@
 #' sam_field(rast_grid, 100, "jittered", 5)
 #' vect_grid = sf::st_as_sf(terra::as.polygons(rast_grid))
 #' sam_field(vect_grid, 100, "random")
-sam_field = function(x, size, type, value, nclusters) {
+sam_field = function(x, size, type, value, nclusters, ...) {
   if (!inherits(x, "sf") || !(sf::st_geometry_type(x, by_geometry = FALSE) %in% c("POLYGON", "MULTIPOLYGON"))) {
     x = sf::st_as_sf(terra::as.polygons(terra::ext(x)))
   }
   if (type == "jittered") {
     simpoints = jitterreg_sample(x, size, value)
   } else if (type == "random") {
-    simpoints = sf::st_sample(x, size)
+    simpoints = sf::st_sample(x, size, ...)
   } else if (type == "clustered") {
     simpoints = clustered_sample(x, size, nclusters, value)
   }

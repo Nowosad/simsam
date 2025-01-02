@@ -4,7 +4,7 @@
 \alias{sam_field}
 \title{Sample spatial field}
 \usage{
-sam_field(x, size, type, value, nclusters)
+sam_field(x, size, type, value, nclusters, ...)
 }
 \arguments{
 \item{x}{Any object that can be coerced to an sf object.}
@@ -18,6 +18,8 @@ sam_field(x, size, type, value, nclusters)
 or radius of the buffer around each cluster (only used when \code{type = "clustered"}).}
 
 \item{nclusters}{Number of clusters to simulate. Only used when \code{type = "clustered"}.}
+
+\item{...}{Additional arguments passed to \code{sf::st_sample()} when \code{type = "random"}.}
 }
 \description{
 Create a sample of a spatial field.
