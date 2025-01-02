@@ -1,0 +1,46 @@
+---
+title: "Creating spatial proxies"
+author: Jakub Nowosad
+date: "`r Sys.Date()`"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Let's start by attaching the necessary packages.
+
+```{r setup}
+library(simsam)
+library(terra)
+```
+
+Next, we create a raster object, which properties will serve as a base for the spatial proxies.
+
+```{r}
+rast_grid = terra::rast(xmin = 0, xmax = 200, ymin = 0, ymax = 200,
+                        ncols = 200, nrows = 200)
+```
+
+The `make_proxy()` function generates spatial proxies for a given raster object.
+It generates three types of proxies: coordinates, Euclidean Distance Fields (EDF), and Oblique Geographic Coordinates (OGC).
+
+```{r}
+# coordinates
+proxy_coords = make_proxy(rast_grid, "coordinates")
+plot(proxy_coords)
+# Euclidean Distance Fields (EDF)
+proxy_edf = make_proxy(rast_grid, "edf")
+plot(proxy_edf)
+# Oblique Geographic Coordinates (OGC)
+proxy_ogc = make_proxy(rast_grid, "ogc", n = 5)
+plot(proxy_ogc)
+```
+
+Additionally, the `add_proxy()` function can be used to add a proxy to an existing raster object.
+
+
+

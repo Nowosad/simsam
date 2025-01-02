@@ -1,0 +1,41 @@
+---
+title: "Sampling"
+author: Jakub Nowosad
+date: "`r Sys.Date()`"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(simsam)
+library(terra)
+```
+
+```{r}
+rast_grid = terra::rast(xmin = 0, xmax = 200, ymin = 0, ymax = 200,
+                        ncols = 200, nrows = 200)
+```
+
+## Sample
+
+```{r}
+set.seed(2024-11-20)
+sample_j1 = sam_field(rast_grid, 100, "jittered", 5)
+plot(sample_j1)
+sample_j2 = sam_field(rast_grid, 100, "jittered", 20)
+plot(sample_j2)
+sample_r = sam_field(rast_grid, 100, "random")
+plot(sample_r)
+sample_c1 = sam_field(rast_grid, 100, "clustered", nclusters = 5, value = 10)
+plot(sample_c1)
+sample_c2 = sam_field(rast_grid, 100, "clustered", nclusters = 5, value = 20)
+plot(sample_c2)
+```
+
+
+
