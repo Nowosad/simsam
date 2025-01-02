@@ -60,7 +60,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">sam_field</span><span class="op">(</span><span class="va">x</span>, <span class="va">size</span>, <span class="va">type</span>, <span class="va">value</span>, <span class="va">nclusters</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">sam_field</span><span class="op">(</span><span class="va">x</span>, <span class="va">size</span>, <span class="va">type</span>, <span class="va">value</span>, <span class="va">nclusters</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -87,6 +87,10 @@ or radius of the buffer around each cluster (only used when <code>type = "cluste
 
 <dt id="arg-nclusters">nclusters<a class="anchor" aria-label="anchor" href="#arg-nclusters"></a></dt>
 <dd><p>Number of clusters to simulate. Only used when <code>type = "clustered"</code>.</p></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>Additional arguments passed to <code><a href="https://r-spatial.github.io/sf/reference/st_sample.html" class="external-link">sf::st_sample()</a></code> when <code>type = "random"</code>.</p></dd>
 
 </dl></div>
 
