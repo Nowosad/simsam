@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">simsam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.3</span>
       </span>
     </div>
 
@@ -53,7 +53,10 @@
       <a href="articles/Covariates_and_outcomes.html">Simulating covariates and outcomes</a>
     </li>
     <li>
-      <a href="articles/Simulating-creating-spatial-proxies-and-sampling.html">Simulating, creating spatial proxies, and sampling</a>
+      <a href="articles/Creating-spatial-proxies.html">Creating spatial proxies</a>
+    </li>
+    <li>
+      <a href="articles/Sampling.html">Sampling</a>
     </li>
   </ul>
 </li>
@@ -86,40 +89,7 @@
 <div class="section level2">
 <h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
 </h2>
-<p>Let’s start by loading the packages and creating a raster object that will serve as a grid template for the simulations.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">simsam</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span></span>
-<span><span class="va">rast_grid</span> <span class="op">=</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span>ncols <span class="op">=</span> <span class="fl">200</span>, nrows <span class="op">=</span> <span class="fl">200</span>, </span>
-<span>                        xmin <span class="op">=</span> <span class="fl">0</span>, xmax <span class="op">=</span> <span class="fl">200</span>, ymin <span class="op">=</span> <span class="fl">0</span>, ymax <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span></code></pre></div>
-<div class="section level3">
-<h3 id="spatial-data-simulation">Spatial data simulation<a class="anchor" aria-label="anchor" href="#spatial-data-simulation"></a>
-</h3>
-<p>The <code><a href="reference/sim_field.html">sim_field()</a></code> function simulates a spatial field with covariates based on the provided arguments.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sim_rast</span> <span class="op">=</span> <span class="fu"><a href="reference/sim_field.html">sim_field</a></span><span class="op">(</span><span class="va">rast_grid</span>, <span class="fl">100</span>, scenario <span class="op">=</span> <span class="st">"autocor"</span>, n_covariates <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sim_rast</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-2-1.png" width="100%"></p>
-</div>
-<div class="section level3">
-<h3 id="creating-spatial-proxies">Creating spatial proxies<a class="anchor" aria-label="anchor" href="#creating-spatial-proxies"></a>
-</h3>
-<p>The <code><a href="reference/make_proxy.html">make_proxy()</a></code> function creates various spatial proxies (e.g., coordinates, Euclidean Distance Fields (EDF), and Oblique Geographic Coordinates (OGC)) based on the provided input raster.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">proxy_edf</span> <span class="op">=</span> <span class="fu"><a href="reference/make_proxy.html">make_proxy</a></span><span class="op">(</span><span class="va">sim_rast</span>, <span class="st">"edf"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">proxy_edf</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-1.png" width="100%"></p>
-</div>
-<div class="section level3">
-<h3 id="sampling-spatial-data">Sampling spatial data<a class="anchor" aria-label="anchor" href="#sampling-spatial-data"></a>
-</h3>
-<p>The <code><a href="reference/sam_field.html">sam_field()</a></code> function samples a spatial field based on the provided arguments.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2024</span><span class="op">-</span><span class="fl">12</span><span class="op">-</span><span class="fl">04</span><span class="op">)</span></span>
-<span><span class="va">sample_c1</span> <span class="op">=</span> <span class="fu"><a href="reference/sam_field.html">sam_field</a></span><span class="op">(</span><span class="va">rast_grid</span>, <span class="fl">100</span>, <span class="st">"clustered"</span>, nclusters <span class="op">=</span> <span class="fl">8</span>, value <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sample_c1</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-4-1.png" width="100%"></p>
-</div>
+<p>Examples of the package usage can be found in the <a href="https://nowosad.github.io/simsam/articles/" class="external-link">vignettes</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="contribution">Contribution<a class="anchor" aria-label="anchor" href="#contribution"></a>

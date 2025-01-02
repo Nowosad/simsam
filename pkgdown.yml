@@ -3,5 +3,6 @@ pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   articles/Covariates_and_outcomes: Covariates_and_outcomes.html
-  articles/Simulating-creating-spatial-proxies-and-sampling: Simulating-creating-spatial-proxies-and-sampling.html
-last_built: 2024-12-16T13:30Z
+  articles/Creating-spatial-proxies: Creating-spatial-proxies.html
+  articles/Sampling: Sampling.html
+last_built: 2025-01-02T09:53Z
