@@ -1,6 +1,4 @@
-library(tinytest)
 library(terra)
-library(sf)
 set.seed(2025-01-03)
 
 # Create a sample raster
@@ -19,3 +17,4 @@ expect_true(inherits(test_clustered, "sf"), info = "Clustered sampling should re
 expect_equal(nrow(test_jittered), 12, info = "Jittered sampling should return the correct number of samples")
 expect_equal(nrow(test_random), 10, info = "Random sampling should return the correct number of samples")
 expect_equal(nrow(test_clustered), 9, info = "Clustered sampling should return the correct number of samples")
+
