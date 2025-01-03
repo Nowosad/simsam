@@ -1,6 +1,6 @@
 Package: simsam
 Title: Simulating and Sampling Spatial Data
-Version: 0.0.3
+Version: 0.0.5
 Authors@R: c(
     person(given = "Jakub", family = "Nowosad", 
     role = c("aut", "cre"),
