@@ -11,31 +11,63 @@ knitr::opts_chunk$set(
 )
 ```
 
+Let's start by attaching the necessary packages and setting the seed.
+
 ```{r setup}
 library(simsam)
 library(terra)
+set.seed(2024-11-20)
 ```
+
+Next, we define the raster grid to sample points/locations from.
 
 ```{r}
 rast_grid = terra::rast(xmin = 0, xmax = 200, ymin = 0, ymax = 200,
                         ncols = 200, nrows = 200)
 ```
 
+Alternatively, we can read a raster from a file.
+
 ## Sample
 
+The **simsam** package supports several types of sampling, including jittered, clustered, and random with the `sam_field()` function.
+All these types of sampling require the `rast_grid` object, the number of samples to create (`size`), and the type of sampling (`type`).
+
+The jittered sampling is a regular sample moved by an amount of noise. 
+The `value` parameter controls the amount of jitter.
+Importantly, this sampling type ensures that all the samples fall within the sampling window.
+
 ```{r}
-set.seed(2024-11-20)
-sample_j1 = sam_field(rast_grid, 100, "jittered", 5)
+sample_j1 = sam_field(rast_grid, size = 100, type = "jittered", value = 5)
 plot(sample_j1)
-sample_j2 = sam_field(rast_grid, 100, "jittered", 20)
+sample_j2 = sam_field(rast_grid, size = 100, type = "jittered", value = 20)
 plot(sample_j2)
-sample_r = sam_field(rast_grid, 100, "random")
-plot(sample_r)
-sample_c1 = sam_field(rast_grid, 100, "clustered", nclusters = 5, value = 10)
+```
+
+The clustered sampling creates samples forming groups of points with similar locations.
+The outcome is controlled by the `nclusters` and `value` parameters, where the former controls the number of clusters and the latter the amount of noise (location variance) within each cluster.
+
+```{r}
+sample_c1 = sam_field(rast_grid, 100, "clustered", nclusters = 5, value = 5)
 plot(sample_c1)
-sample_c2 = sam_field(rast_grid, 100, "clustered", nclusters = 5, value = 20)
+sample_c2 = sam_field(rast_grid, 100, "clustered", nclusters = 5, value = 10)
 plot(sample_c2)
 ```
 
+Random sampling creates samples with no spatial structure.
 
+```{r}
+sample_r = sam_field(rast_grid, 100, "random")
+plot(sample_r)
+```
+
+Moreover, the `sam_field()` function can be used with additional arguments passed to the `terra::spatSample()` function, when the `type` is not specified.
+In such cases, the `method` argument can be used to control the sampling method, e.g., `method = "regular"` or `method = "random"` and the `exhaustive` argument to sample only from not NA areas in the input raster.
+
+```{r}
+sample_u1 = sam_field(rast_grid, 100, method = "regular")
+plot(sample_u1)
+sample_u2 = sam_field(rast_grid, 100, method = "random", exhaustive = TRUE)
+plot(sample_u2)
+```
 
