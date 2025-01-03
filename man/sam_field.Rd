@@ -4,10 +4,10 @@
 \alias{sam_field}
 \title{Sample spatial field}
 \usage{
-sam_field(x, size, type, value, nclusters, ...)
+sam_field(x, size, type = "", value, nclusters, ...)
 }
 \arguments{
-\item{x}{Any object that can be coerced to an sf object.}
+\item{x}{A raster object.}
 
 \item{size}{Number of samples to create.}
 
@@ -19,7 +19,7 @@ or radius of the buffer around each cluster (only used when \code{type = "cluste
 
 \item{nclusters}{Number of clusters to simulate. Only used when \code{type = "clustered"}.}
 
-\item{...}{Additional arguments passed to \code{sf::st_sample()} when \code{type = "random"}.}
+\item{...}{Additional arguments passed to \code{terra::spatSample()}.}
 }
 \description{
 Create a sample of a spatial field.
@@ -27,6 +27,4 @@ Create a sample of a spatial field.
 \examples{
 rast_grid = terra::rast(ncols = 300, nrows = 100, xmin = 0, xmax = 300, ymin = 0, ymax = 100)
 sam_field(rast_grid, 100, "jittered", 5)
-vect_grid = sf::st_as_sf(terra::as.polygons(rast_grid))
-sam_field(vect_grid, 100, "random")
 }

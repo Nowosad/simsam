@@ -4,7 +4,7 @@
 \alias{clustered_sample}
 \title{Simulates clustered samples}
 \usage{
-clustered_sample(x, size, nclusters, radius)
+clustered_sample(x, size, nclusters, radius, ...)
 }
 \arguments{
 \item{x}{sf/sfc polygon where samples will be simulated.}
@@ -14,6 +14,8 @@ clustered_sample(x, size, nclusters, radius)
 \item{nclusters}{Number of clusters to simulate.}
 
 \item{radius}{Radius of the buffer for intra-cluster simulation.}
+
+\item{...}{Additional arguments passed to \code{terra::spatSample()}.}
 }
 \description{
 Simulates clustered samples by simulating a number of randomly sampled
