@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simsam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.5</span>
       </span>
     </div>
 
@@ -70,13 +70,14 @@
 
 
 
-      </header><script src="Creating-spatial-proxies_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Creating spatial proxies</h1>
-                        <h4 data-toc-skip class="author">Jakub Nowosad</h4>
+                        <h4 data-toc-skip class="author">Jakub
+Nowosad</h4>
             
-            <h4 data-toc-skip class="date">2025-01-02</h4>
+            <h4 data-toc-skip class="date">2025-01-20</h4>
       
 
       <div class="hidden name"><code>Creating-spatial-proxies.Rmd</code></div>
@@ -89,12 +90,16 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">simsam</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; terra 1.8.5</span></span></code></pre></div>
-<p>Next, we create a raster object, which properties will serve as a base for the spatial proxies.</p>
+<span><span class="co">#&gt; terra 1.8.10</span></span></code></pre></div>
+<p>Next, we create a raster object, which properties will serve as a
+base for the spatial proxies.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rast_grid</span> <span class="op">=</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="fl">0</span>, xmax <span class="op">=</span> <span class="fl">200</span>, ymin <span class="op">=</span> <span class="fl">0</span>, ymax <span class="op">=</span> <span class="fl">200</span>,</span>
 <span>                        ncols <span class="op">=</span> <span class="fl">200</span>, nrows <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span></code></pre></div>
-<p>The <code><a href="../reference/make_proxy.html">make_proxy()</a></code> function generates spatial proxies for a given raster object. It generates three types of proxies: coordinates, Euclidean Distance Fields (EDF), and Oblique Geographic Coordinates (OGC).</p>
+<p>The <code><a href="../reference/make_proxy.html">make_proxy()</a></code> function generates spatial proxies for
+a given raster object. It generates three types of proxies: coordinates,
+Euclidean Distance Fields (EDF), and Oblique Geographic Coordinates
+(OGC).</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># coordinates</span></span>
 <span><span class="va">proxy_coords</span> <span class="op">=</span> <span class="fu"><a href="../reference/make_proxy.html">make_proxy</a></span><span class="op">(</span><span class="va">rast_grid</span>, <span class="st">"coordinates"</span><span class="op">)</span></span>
@@ -110,7 +115,8 @@
 <span><span class="va">proxy_ogc</span> <span class="op">=</span> <span class="fu"><a href="../reference/make_proxy.html">make_proxy</a></span><span class="op">(</span><span class="va">rast_grid</span>, <span class="st">"ogc"</span>, n <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">proxy_ogc</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Creating-spatial-proxies_files/figure-html/unnamed-chunk-3-3.png" width="700"></p>
-<p>Additionally, the <code><a href="../reference/make_proxy.html">add_proxy()</a></code> function can be used to add a proxy to an existing raster object.</p>
+<p>Additionally, the <code><a href="../reference/make_proxy.html">add_proxy()</a></code> function can be used to
+add a proxy to an existing raster object.</p>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

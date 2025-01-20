@@ -18,7 +18,7 @@ clusters, and then randomly simulate points within a buffer of the clusters."><!
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simsam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.5</span>
       </span>
     </div>
 
@@ -62,7 +62,7 @@ clusters, and then randomly simulate points within a buffer of the clusters.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">clustered_sample</span><span class="op">(</span><span class="va">x</span>, <span class="va">size</span>, <span class="va">nclusters</span>, <span class="va">radius</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">clustered_sample</span><span class="op">(</span><span class="va">x</span>, <span class="va">size</span>, <span class="va">nclusters</span>, <span class="va">radius</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -83,6 +83,10 @@ clusters, and then randomly simulate points within a buffer of the clusters.</p>
 
 <dt id="arg-radius">radius<a class="anchor" aria-label="anchor" href="#arg-radius"></a></dt>
 <dd><p>Radius of the buffer for intra-cluster simulation.</p></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>Additional arguments passed to <code><a href="https://rspatial.github.io/terra/reference/sample.html" class="external-link">terra::spatSample()</a></code>.</p></dd>
 
 </dl></div>
 

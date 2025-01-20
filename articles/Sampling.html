@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simsam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.5</span>
       </span>
     </div>
 
@@ -70,13 +70,14 @@
 
 
 
-      </header><script src="Sampling_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Sampling</h1>
-                        <h4 data-toc-skip class="author">Jakub Nowosad</h4>
+                        <h4 data-toc-skip class="author">Jakub
+Nowosad</h4>
             
-            <h4 data-toc-skip class="date">2025-01-02</h4>
+            <h4 data-toc-skip class="date">2025-01-20</h4>
       
 
       <div class="hidden name"><code>Sampling.Rmd</code></div>
@@ -85,37 +86,71 @@
 
     
     
+<p>Let’s start by attaching the necessary packages and setting the
+seed.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">simsam</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; terra 1.8.5</span></span></code></pre></div>
+<span><span class="co">#&gt; terra 1.8.10</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2024</span><span class="op">-</span><span class="fl">11</span><span class="op">-</span><span class="fl">20</span><span class="op">)</span></span></code></pre></div>
+<p>Next, we define the raster grid to sample points/locations from.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rast_grid</span> <span class="op">=</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="fl">0</span>, xmax <span class="op">=</span> <span class="fl">200</span>, ymin <span class="op">=</span> <span class="fl">0</span>, ymax <span class="op">=</span> <span class="fl">200</span>,</span>
 <span>                        ncols <span class="op">=</span> <span class="fl">200</span>, nrows <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span></code></pre></div>
+<p>Alternatively, we can read a raster from a file.</p>
 <div class="section level2">
 <h2 id="sample">Sample<a class="anchor" aria-label="anchor" href="#sample"></a>
 </h2>
+<p>The <strong>simsam</strong> package supports several types of
+sampling, including jittered, clustered, and random with the
+<code><a href="../reference/sam_field.html">sam_field()</a></code> function. All these types of sampling require
+the <code>rast_grid</code> object, the number of samples to create
+(<code>size</code>), and the type of sampling (<code>type</code>).</p>
+<p>The jittered sampling is a regular sample moved by an amount of
+noise. The <code>value</code> parameter controls the amount of jitter.
+Importantly, this sampling type ensures that all the samples fall within
+the sampling window.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2024</span><span class="op">-</span><span class="fl">11</span><span class="op">-</span><span class="fl">20</span><span class="op">)</span></span>
-<span><span class="va">sample_j1</span> <span class="op">=</span> <span class="fu"><a href="../reference/sam_field.html">sam_field</a></span><span class="op">(</span><span class="va">rast_grid</span>, <span class="fl">100</span>, <span class="st">"jittered"</span>, <span class="fl">5</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">sample_j1</span> <span class="op">=</span> <span class="fu"><a href="../reference/sam_field.html">sam_field</a></span><span class="op">(</span><span class="va">rast_grid</span>, size <span class="op">=</span> <span class="fl">100</span>, type <span class="op">=</span> <span class="st">"jittered"</span>, value <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sample_j1</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Sampling_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sample_j2</span> <span class="op">=</span> <span class="fu"><a href="../reference/sam_field.html">sam_field</a></span><span class="op">(</span><span class="va">rast_grid</span>, <span class="fl">100</span>, <span class="st">"jittered"</span>, <span class="fl">20</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">sample_j2</span> <span class="op">=</span> <span class="fu"><a href="../reference/sam_field.html">sam_field</a></span><span class="op">(</span><span class="va">rast_grid</span>, size <span class="op">=</span> <span class="fl">100</span>, type <span class="op">=</span> <span class="st">"jittered"</span>, value <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sample_j2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Sampling_files/figure-html/unnamed-chunk-3-2.png" width="700"></p>
+<p>The clustered sampling creates samples forming groups of points with
+similar locations. The outcome is controlled by the
+<code>nclusters</code> and <code>value</code> parameters, where the
+former controls the number of clusters and the latter the amount of
+noise (location variance) within each cluster.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sample_c1</span> <span class="op">=</span> <span class="fu"><a href="../reference/sam_field.html">sam_field</a></span><span class="op">(</span><span class="va">rast_grid</span>, <span class="fl">100</span>, <span class="st">"clustered"</span>, nclusters <span class="op">=</span> <span class="fl">5</span>, value <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sample_c1</span><span class="op">)</span></span></code></pre></div>
+<p><img src="Sampling_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sample_c2</span> <span class="op">=</span> <span class="fu"><a href="../reference/sam_field.html">sam_field</a></span><span class="op">(</span><span class="va">rast_grid</span>, <span class="fl">100</span>, <span class="st">"clustered"</span>, nclusters <span class="op">=</span> <span class="fl">5</span>, value <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sample_c2</span><span class="op">)</span></span></code></pre></div>
+<p><img src="Sampling_files/figure-html/unnamed-chunk-4-2.png" width="700"></p>
+<p>Random sampling creates samples with no spatial structure.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sample_r</span> <span class="op">=</span> <span class="fu"><a href="../reference/sam_field.html">sam_field</a></span><span class="op">(</span><span class="va">rast_grid</span>, <span class="fl">100</span>, <span class="st">"random"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sample_r</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Sampling_files/figure-html/unnamed-chunk-3-3.png" width="700"></p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sample_c1</span> <span class="op">=</span> <span class="fu"><a href="../reference/sam_field.html">sam_field</a></span><span class="op">(</span><span class="va">rast_grid</span>, <span class="fl">100</span>, <span class="st">"clustered"</span>, nclusters <span class="op">=</span> <span class="fl">5</span>, value <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sample_c1</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Sampling_files/figure-html/unnamed-chunk-3-4.png" width="700"></p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sample_c2</span> <span class="op">=</span> <span class="fu"><a href="../reference/sam_field.html">sam_field</a></span><span class="op">(</span><span class="va">rast_grid</span>, <span class="fl">100</span>, <span class="st">"clustered"</span>, nclusters <span class="op">=</span> <span class="fl">5</span>, value <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sample_c2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Sampling_files/figure-html/unnamed-chunk-3-5.png" width="700"></p>
+<p><img src="Sampling_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
+<p>Moreover, the <code><a href="../reference/sam_field.html">sam_field()</a></code> function can be used with
+additional arguments passed to the <code><a href="https://rspatial.github.io/terra/reference/sample.html" class="external-link">terra::spatSample()</a></code>
+function, when the <code>type</code> is not specified. In such cases,
+the <code>method</code> argument can be used to control the sampling
+method, e.g., <code>method = "regular"</code> or
+<code>method = "random"</code> and the <code>exhaustive</code> argument
+to sample only from not NA areas in the input raster.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sample_u1</span> <span class="op">=</span> <span class="fu"><a href="../reference/sam_field.html">sam_field</a></span><span class="op">(</span><span class="va">rast_grid</span>, <span class="fl">100</span>, method <span class="op">=</span> <span class="st">"regular"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sample_u1</span><span class="op">)</span></span></code></pre></div>
+<p><img src="Sampling_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sample_u2</span> <span class="op">=</span> <span class="fu"><a href="../reference/sam_field.html">sam_field</a></span><span class="op">(</span><span class="va">rast_grid</span>, <span class="fl">100</span>, method <span class="op">=</span> <span class="st">"random"</span>, exhaustive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sample_u2</span><span class="op">)</span></span></code></pre></div>
+<p><img src="Sampling_files/figure-html/unnamed-chunk-6-2.png" width="700"></p>
 </div>
   </div>
 

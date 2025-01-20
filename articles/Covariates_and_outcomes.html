@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simsam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.5</span>
       </span>
     </div>
 
@@ -70,13 +70,14 @@
 
 
 
-      </header><script src="Covariates_and_outcomes_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Simulating covariates and outcomes</h1>
-                        <h4 data-toc-skip class="author">Jakub Nowosad</h4>
+                        <h4 data-toc-skip class="author">Jakub
+Nowosad</h4>
             
-            <h4 data-toc-skip class="date">2025-01-02</h4>
+            <h4 data-toc-skip class="date">2025-01-20</h4>
       
 
       <div class="hidden name"><code>Covariates_and_outcomes.Rmd</code></div>
@@ -85,11 +86,12 @@
 
     
     
-<p>Let’s start by attaching the necessary packages and setting the seed.</p>
+<p>Let’s start by attaching the necessary packages and setting the
+seed.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">simsam</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; terra 1.8.5</span></span>
+<span><span class="co">#&gt; terra 1.8.10</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2024</span><span class="op">-</span><span class="fl">12</span><span class="op">-</span><span class="fl">13</span><span class="op">)</span></span></code></pre></div>
 <p>Next, we specify a raster template for the simulations.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -98,23 +100,39 @@
 <div class="section level2">
 <h2 id="simulate">Simulate<a class="anchor" aria-label="anchor" href="#simulate"></a>
 </h2>
-<p>We can simulate any number of covariates based on specified parameters using the <code><a href="../reference/sim_covariates.html">sim_covariates()</a></code> function. This function is rather flexible when it comes to which parameters to use, as it can take a range or a complete variogram model, and some additional simulation arguments. This is shown below.</p>
-<p>The first example shows the use of just a <code>range</code> parameter to simulate four covariates for the provided raster grid. The rest of the arguments (e.g., <code>beta</code> representing the average value of the field, <code>nmax</code> representing the maximum number of points to simulate, and <code>psill</code> representing the sill of the variogram model) are set to default values.</p>
+<p>We can simulate any number of covariates based on specified
+parameters using the <code><a href="../reference/sim_covariates.html">sim_covariates()</a></code> function. This
+function is rather flexible when it comes to which parameters to use, as
+it can take a range or a complete variogram model, and some additional
+simulation arguments. This is shown below.</p>
+<p>The first example shows the use of just a <code>range</code>
+parameter to simulate four covariates for the provided raster grid. The
+rest of the arguments (e.g., <code>beta</code> representing the average
+value of the field, <code>nmax</code> representing the maximum number of
+points to simulate, and <code>psill</code> representing the sill of the
+variogram model) are set to default values.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">covariates_one</span> <span class="op">=</span> <span class="fu"><a href="../reference/sim_covariates.html">sim_covariates</a></span><span class="op">(</span><span class="va">rast_grid</span>, range <span class="op">=</span> <span class="fl">10</span>, n <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/panel.html" class="external-link">panel</a></span><span class="op">(</span><span class="va">covariates_one</span>, nr <span class="op">=</span> <span class="fl">1</span>, col.main <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Covariates_and_outcomes_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
-<p>The second example uses a complete variogram model to simulate four covariates for the provided raster grid. Here, we specify not only the range but also the model type (exponential) and the sill of the variogram model.</p>
+<p>The second example uses a complete variogram model to simulate four
+covariates for the provided raster grid. Here, we specify not only the
+range but also the model type (exponential) and the sill of the
+variogram model.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">covariates_two</span> <span class="op">=</span> <span class="fu"><a href="../reference/sim_covariates.html">sim_covariates</a></span><span class="op">(</span><span class="va">rast_grid</span>, vgm <span class="op">=</span> <span class="fu">gstat</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html" class="external-link">vgm</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"Exp"</span>, psill <span class="op">=</span> <span class="fl">1</span>, range <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>, n <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/panel.html" class="external-link">panel</a></span><span class="op">(</span><span class="va">covariates_two</span>, nr <span class="op">=</span> <span class="fl">1</span>, col.main <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Covariates_and_outcomes_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
-<p>The third example uses a nugget effect to simulate four covariates without any spatial correlation.</p>
+<p>The third example uses a nugget effect to simulate four covariates
+without any spatial correlation.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">covariates_three</span> <span class="op">=</span> <span class="fu"><a href="../reference/sim_covariates.html">sim_covariates</a></span><span class="op">(</span><span class="va">rast_grid</span>, vgm <span class="op">=</span> <span class="fu">gstat</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html" class="external-link">vgm</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"Nug"</span>, psill <span class="op">=</span> <span class="fl">2</span>, range <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, n <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/panel.html" class="external-link">panel</a></span><span class="op">(</span><span class="va">covariates_three</span>, nr <span class="op">=</span> <span class="fl">1</span>, col.main <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Covariates_and_outcomes_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
-<p>The last example creates a single simulation of a binary outcome (<code>indicator = TRUE</code>) based on a specified variogram model and a beta value. The result of such a simulation depends on the specified variogram model and the beta value.</p>
+<p>The last example creates a single simulation of a binary outcome
+(<code>indicator = TRUE</code>) based on a specified variogram model and
+a beta value. The result of such a simulation depends on the specified
+variogram model and the beta value.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">covariates_four</span> <span class="op">=</span> <span class="fu"><a href="../reference/sim_covariates.html">sim_covariates</a></span><span class="op">(</span><span class="va">rast_grid</span>, vgm <span class="op">=</span> <span class="fu">gstat</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html" class="external-link">vgm</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"Exp"</span>, psill <span class="op">=</span> <span class="fl">10</span>, range <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, n <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>                                 beta <span class="op">=</span> <span class="fl">30</span>, indicators <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -124,23 +142,36 @@
 <div class="section level2">
 <h2 id="blend">Blend<a class="anchor" aria-label="anchor" href="#blend"></a>
 </h2>
-<p>The <code><a href="../reference/sim_covariates.html">sim_covariates()</a></code> creates new rasters. Now, we can blend these rasters to create new outcomes with the <code><a href="../reference/blend_rasters.html">blend_rasters()</a></code> function. This function accepts one or more <code>SpatRaster</code> objects, and a formula that specifies how to combine them. Let’s try it out on a few examples.</p>
-<p>The first new raster is based on the first set of covariates and a formula that combines them by adding them together.</p>
+<p>The <code><a href="../reference/sim_covariates.html">sim_covariates()</a></code> creates new rasters. Now, we can
+blend these rasters to create new outcomes with the
+<code><a href="../reference/blend_rasters.html">blend_rasters()</a></code> function. This function accepts one or more
+<code>SpatRaster</code> objects, and a formula that specifies how to
+combine them. Let’s try it out on a few examples.</p>
+<p>The first new raster is based on the first set of covariates and a
+formula that combines them by adding them together.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">outcome_one</span> <span class="op">=</span> <span class="fu">simsam</span><span class="fu">::</span><span class="fu"><a href="../reference/blend_rasters.html">blend_rasters</a></span><span class="op">(</span><span class="va">covariates_one</span>, <span class="op">~</span> <span class="va">cov1</span> <span class="op">+</span> <span class="va">cov2</span> <span class="op">+</span> <span class="va">cov3</span> <span class="op">+</span> <span class="va">cov4</span><span class="op">)</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">outcome_one</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Covariates_and_outcomes_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
-<p>The <code><a href="../reference/blend_rasters.html">blend_rasters()</a></code> function can also be used to further blend the outcomes with additional covariates. Here, we are adding a random noise (<code>cov1</code> from <code>covariates_three</code>) to the outcome.</p>
+<p>The <code><a href="../reference/blend_rasters.html">blend_rasters()</a></code> function can also be used to further
+blend the outcomes with additional covariates. Here, we are adding a
+random noise (<code>cov1</code> from <code>covariates_three</code>) to
+the outcome.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">outcome_two</span> <span class="op">=</span> <span class="fu">simsam</span><span class="fu">::</span><span class="fu"><a href="../reference/blend_rasters.html">blend_rasters</a></span><span class="op">(</span><span class="va">outcome_one</span>, <span class="op">~</span> <span class="va">outcome</span> <span class="op">+</span> <span class="va">cov1</span>, <span class="va">covariates_three</span><span class="op">)</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">outcome_two</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Covariates_and_outcomes_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
-<p>The third example shows how to blend the first created outcome with a binary covariate (<code>cov1</code> from <code>covariates_four</code>). Additionally, it also highlights the flexibility of the formula notation, which allows, for example, the use of various mathematical operations and constants.</p>
+<p>The third example shows how to blend the first created outcome with a
+binary covariate (<code>cov1</code> from <code>covariates_four</code>).
+Additionally, it also highlights the flexibility of the formula
+notation, which allows, for example, the use of various mathematical
+operations and constants.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">outcome_three</span> <span class="op">=</span> <span class="fu">simsam</span><span class="fu">::</span><span class="fu"><a href="../reference/blend_rasters.html">blend_rasters</a></span><span class="op">(</span><span class="va">outcome_one</span>, <span class="op">~</span> <span class="va">outcome</span> <span class="op">*</span> <span class="op">(</span><span class="va">cov1</span> <span class="op">+</span> <span class="fl">0.2</span><span class="op">)</span>, <span class="va">covariates_four</span><span class="op">)</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">outcome_three</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Covariates_and_outcomes_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
-<p>Finally, the last example shows that the <code><a href="../reference/blend_rasters.html">blend_rasters()</a></code> function can be used in a pipe-like manner.</p>
+<p>Finally, the last example shows that the <code><a href="../reference/blend_rasters.html">blend_rasters()</a></code>
+function can be used in a pipe-like manner.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">outcome_four</span> <span class="op">=</span> <span class="fu">simsam</span><span class="fu">::</span><span class="fu"><a href="../reference/blend_rasters.html">blend_rasters</a></span><span class="op">(</span><span class="va">covariates_two</span>, <span class="op">~</span> <span class="va">cov1</span> <span class="op">+</span> <span class="va">cov2</span> <span class="op">*</span> <span class="va">cov3</span> <span class="op">+</span> <span class="va">cov4</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">simsam</span><span class="fu">::</span><span class="fu"><a href="../reference/blend_rasters.html">blend_rasters</a></span><span class="op">(</span><span class="op">~</span> <span class="va">outcome</span> <span class="op">*</span> <span class="op">(</span><span class="va">cov1</span> <span class="op">+</span> <span class="fl">0.2</span><span class="op">)</span>, <span class="va">covariates_four</span><span class="op">)</span></span>
