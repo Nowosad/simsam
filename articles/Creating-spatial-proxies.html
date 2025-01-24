@@ -77,7 +77,7 @@
                         <h4 data-toc-skip class="author">Jakub
 Nowosad</h4>
             
-            <h4 data-toc-skip class="date">2025-01-20</h4>
+            <h4 data-toc-skip class="date">2025-01-24</h4>
       
 
       <div class="hidden name"><code>Creating-spatial-proxies.Rmd</code></div>
@@ -117,6 +117,13 @@ Euclidean Distance Fields (EDF), and Oblique Geographic Coordinates
 <p><img src="Creating-spatial-proxies_files/figure-html/unnamed-chunk-3-3.png" width="700"></p>
 <p>Additionally, the <code><a href="../reference/make_proxy.html">add_proxy()</a></code> function can be used to
 add a proxy to an existing raster object.</p>
+<p>Note: Spatial proxies can be used as predictors in machine learning
+models to represent spatial structure in the data. However, it is
+important to remember that they, in general, work best for interpolation
+problems and may not be suitable for extrapolation. For more information
+on the usefulness and limitations of spatial proxies for machine
+learning models, see the <a href="https://doi.org/10.5194/gmd-17-6007-2024" class="external-link">Mila et al. (2024)</a>
+paper.</p>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
