@@ -42,5 +42,8 @@ plot(proxy_ogc)
 
 Additionally, the `add_proxy()` function can be used to add a proxy to an existing raster object.
 
+Note: Spatial proxies can be used as predictors in machine learning models to represent spatial structure in the data.
+However, it is important to remember that they, in general, work best for interpolation problems and may not be suitable for extrapolation.
+For more information on the usefulness and limitations of spatial proxies for machine learning models, see the [Mila et al. (2024)](https://doi.org/10.5194/gmd-17-6007-2024) paper.
 
 
