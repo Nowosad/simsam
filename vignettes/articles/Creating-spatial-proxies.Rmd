@@ -36,7 +36,7 @@ plot(proxy_coords)
 proxy_edf = make_proxy(rast_grid, "edf")
 plot(proxy_edf)
 # Oblique Geographic Coordinates (OGC)
-proxy_ogc = make_proxy(rast_grid, "ogc", n = 5)
+proxy_ogc = make_proxy(rast_grid, "ogc", opts = list(n = 5))
 plot(proxy_ogc)
 ```
 
