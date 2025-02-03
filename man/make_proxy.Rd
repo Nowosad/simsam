@@ -5,16 +5,17 @@
 \alias{add_proxy}
 \title{Generate spatial proxies}
 \usage{
-make_proxy(rast_grid, type, n)
+make_proxy(rast_grid, type, opts = NULL)
 
-add_proxy(rast_grid, type, n)
+add_proxy(rast_grid, type, opts = NULL)
 }
 \arguments{
 \item{rast_grid}{A raster object with the desired dimensions}
 
 \item{type}{The type of proxy to generate. Options are coordinates ("coordinates"), Euclidean Distance Fields ("edf"), and Oblique Geographic Coordinates ("ogc")}
 
-\item{n}{The number of angles to use when generating oblique geographic coordinates. Only used when \code{type = "ogc"}}
+\item{opts}{A list of options to pass to the proxy generation function. Only used when \code{type = "edf"} or \code{type = "ogc"}.
+When \code{type = "edf"}, the "\code{coords}" option is and sf object a matrix with two columns (x, y) representing the coordinates to use when generating Euclidean Distance Fields. When \code{type = "ogc"}, the "\code{n}" option is an integer representing the number of angles to use when generating Oblique Geographic Coordinates.}
 }
 \value{
 A SpatRaster object with the generated spatial proxies
@@ -28,7 +29,7 @@ Additionally, the \code{add_proxy()} function can be used to add a proxy to an e
 rast_grid = terra::rast(ncols = 300, nrows = 100, xmin = 0, xmax = 300, ymin = 0, ymax = 100)
 proxy_coords = make_proxy(rast_grid, "coordinates")
 proxy_edf = make_proxy(rast_grid, "edf")
-proxy_ogc = make_proxy(rast_grid, "ogc", 5)
+proxy_ogc = make_proxy(rast_grid, "ogc", opts = list(n = 5))
 terra::plot(proxy_coords)
 terra::plot(proxy_edf)
 terra::plot(proxy_ogc)

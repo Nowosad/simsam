@@ -6,7 +6,8 @@
 #'
 #' @param rast_grid A raster object with the desired dimensions
 #' @param type The type of proxy to generate. Options are coordinates ("coordinates"), Euclidean Distance Fields ("edf"), and Oblique Geographic Coordinates ("ogc")
-#' @param n The number of angles to use when generating oblique geographic coordinates. Only used when `type = "ogc"`
+#' @param opts A list of options to pass to the proxy generation function. Only used when `type = "edf"` or `type = "ogc"`.
+#' When `type = "edf"`, the "`coords`" option is and sf object a matrix with two columns (x, y) representing the coordinates to use when generating Euclidean Distance Fields. When `type = "ogc"`, the "`n`" option is an integer representing the number of angles to use when generating Oblique Geographic Coordinates.
 #'
 #' @references Behrens, T., Schmidt, K., Viscarra Rossel, R. A., Gries, P., Scholten, T., & MacMillan, R. A. (2018). Spatial modelling with Euclidean distance fields and machine learning. European journal of soil science, 69(5), 757-770.
 #' @references Møller, A. B., Beucher, A. M., Pouladi, N., & Greve, M. H. (2020). Oblique geographic coordinates as covariates for digital soil mapping. Soil, 6(2), 269-289.
@@ -18,23 +19,23 @@
 #' rast_grid = terra::rast(ncols = 300, nrows = 100, xmin = 0, xmax = 300, ymin = 0, ymax = 100)
 #' proxy_coords = make_proxy(rast_grid, "coordinates")
 #' proxy_edf = make_proxy(rast_grid, "edf")
-#' proxy_ogc = make_proxy(rast_grid, "ogc", 5)
+#' proxy_ogc = make_proxy(rast_grid, "ogc", opts = list(n = 5))
 #' terra::plot(proxy_coords)
 #' terra::plot(proxy_edf)
 #' terra::plot(proxy_ogc)
-make_proxy = function(rast_grid, type, n){
+make_proxy = function(rast_grid, type, opts = NULL){
   if(type == "coordinates"){
     return(proxy_coordinates(rast_grid))
   } else if(type == "edf"){
-    return(proxy_edf(rast_grid))
+    return(proxy_edf(rast_grid, opts$coords))
   } else if(type == "ogc"){
-    return(proxy_ogc(rast_grid, n))
+    return(proxy_ogc(rast_grid, opts$n))
   }
 }
 #' @export
 #' @rdname make_proxy
-add_proxy = function(rast_grid, type, n){
-  c(rast_grid, make_proxy(rast_grid, type, n))
+add_proxy = function(rast_grid, type, opts = NULL){
+  c(rast_grid, make_proxy(rast_grid, type, opts))
 }
 
 proxy_coordinates = function(rast_grid){
@@ -45,31 +46,50 @@ proxy_coordinates = function(rast_grid){
   return(proxy_coords_stack)
 }
 
-proxy_edf = function(rast_grid){
-  proxy_edf_stack = terra::rast(rast_grid, nl = 5)
-  rast_grid_coords = terra::crds(rast_grid)
+proxy_edf = function(rast_grid, coords = NULL) {
 
-  # Generate spatial proxies: EDF
-  rast_extent = as.vector(terra::ext(rast_grid))
+  # If no custom coordinates are provided, use default: four corners and center.
+  if (is.null(coords)) {
+    rast_extent = as.vector(terra::ext(rast_grid))
+    xmin = rast_extent[1]; xmax = rast_extent[2]
+    ymin = rast_extent[3]; ymax = rast_extent[4]
+    coords = rbind(
+      EDF1 = c(xmin, ymax),
+      EDF2 = c(xmax, ymax),
+      EDF3 = c(xmin, ymin),
+      EDF4 = c(xmax, ymin),
+      EDF5 = c((xmin + xmax) / 2, (ymin + ymax) / 2)
+    )
+  } else {
+    # Ensure coords is a matrix with two columns.
+    if (inherits(coords, "sf")) {
+      coords = terra::vect(coords)
+    }
+    if (inherits(coords, "SpatVector")) {
+      coords = terra::crds(coords)
+    }
+    coords = as.matrix(coords)
+    if (ncol(coords) != 2) {
+      stop("coords must be a matrix (or convertible to) with two columns (x, y).")
+    }
+    if (is.null(rownames(coords))) {
+      rownames(coords) = paste0("EDF", seq_len(nrow(coords)))
+    }
+  }
 
-  xmin = rast_extent[1]; xmax = rast_extent[2]
-  ymin = rast_extent[3]; ymax = rast_extent[4]
-
-  top_left = cbind(xmin, ymax); top_right = cbind(xmax, ymax)
-  bottom_left = cbind(xmin, ymin); bottom_right = cbind(xmax, ymin)
-  center = cbind((xmin + xmax) / 2, (ymin + ymax) / 2)
-
+  # Use appropriate coordinate flag based on CRS (lonlat or not)
   ll_crs = is_lonlat(rast_grid)
 
-  EDF1 = terra::distance(rast_grid_coords, top_left, lonlat = ll_crs)
-  EDF2 = terra::distance(rast_grid_coords, top_right, lonlat = ll_crs)
-  EDF3 = terra::distance(rast_grid_coords, bottom_left, lonlat = ll_crs)
-  EDF4 = terra::distance(rast_grid_coords, bottom_right, lonlat = ll_crs)
-  EDF5 = terra::distance(rast_grid_coords, center, lonlat = ll_crs)
-
-  proxy_edf_stack_vals = as.data.frame(cbind(EDF1, EDF2, EDF3, EDF4, EDF5))
+  rast_grid_coords = terra::crds(rast_grid)
+  # Compute distances for each provided point; resulting in a data.frame with one column per point.
+  proxy_vals_list = lapply(1:nrow(coords), function(i) {
+    terra::distance(rast_grid_coords, coords[i, , drop = FALSE], lonlat = ll_crs)
+  })
+  proxy_edf_stack_vals = as.data.frame(do.call(cbind, proxy_vals_list))
+  proxy_edf_stack = terra::rast(rast_grid, nl = ncol(proxy_edf_stack_vals))
   proxy_edf_stack = terra::setValues(proxy_edf_stack, proxy_edf_stack_vals)
-  names(proxy_edf_stack) = c("EDF1", "EDF2", "EDF3", "EDF4", "EDF5")
+  names(proxy_edf_stack) = rownames(coords)
+
   return(proxy_edf_stack)
 }
 
