@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simsam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.6</span>
       </span>
     </div>
 
@@ -77,7 +77,7 @@
                         <h4 data-toc-skip class="author">Jakub
 Nowosad</h4>
             
-            <h4 data-toc-skip class="date">2025-01-27</h4>
+            <h4 data-toc-skip class="date">2025-02-03</h4>
       
 
       <div class="hidden name"><code>Creating-spatial-proxies.Rmd</code></div>
@@ -112,7 +112,7 @@ Euclidean Distance Fields (EDF), and Oblique Geographic Coordinates
 <p><img src="Creating-spatial-proxies_files/figure-html/unnamed-chunk-3-2.png" width="700"></p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Oblique Geographic Coordinates (OGC)</span></span>
-<span><span class="va">proxy_ogc</span> <span class="op">=</span> <span class="fu"><a href="../reference/make_proxy.html">make_proxy</a></span><span class="op">(</span><span class="va">rast_grid</span>, <span class="st">"ogc"</span>, n <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+<span><span class="va">proxy_ogc</span> <span class="op">=</span> <span class="fu"><a href="../reference/make_proxy.html">make_proxy</a></span><span class="op">(</span><span class="va">rast_grid</span>, <span class="st">"ogc"</span>, opts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">proxy_ogc</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Creating-spatial-proxies_files/figure-html/unnamed-chunk-3-3.png" width="700"></p>
 <p>Additionally, the <code><a href="../reference/make_proxy.html">add_proxy()</a></code> function can be used to
