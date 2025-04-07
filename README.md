@@ -41,6 +41,7 @@ through a GitHub pull request. Feel also free to contact us by creating
 The initial development of this R package was made possible through the
 financial support of the European Union’s Horizon Europe research and
 innovation programme under the Marie Skłodowska-Curie grant agreement
-No. 101147446.
+No. 101147446 and further supported by the Federal Ministry for Economic
+Affairs and Climate Action of Germany (project No. 50EE2009).
 
 ![](https://rea.ec.europa.eu/sites/default/files/styles/oe_theme_medium_2x_no_crop/public/2021-04/EN-Funded%20by%20the%20EU-POS.jpg?itok=Qx-y2s5d)
