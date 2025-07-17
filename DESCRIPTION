@@ -1,11 +1,11 @@
 Package: simsam
 Title: Simulating and Sampling Spatial Data
-Version: 0.0.6
+Version: 0.0.7
 Authors@R: c(
     person(given = "Jakub", family = "Nowosad", 
-    role = c("aut", "cre"),
-    email = "nowosad.jakub@gmail.com", 
-    comment = c(ORCID = "0000-0002-1057-3721")),
+      role = c("aut", "cre"),
+      email = "nowosad.jakub@gmail.com", 
+      comment = c(ORCID = "0000-0002-1057-3721")),
     person(given = "Carles", family = "Milà", role = c("ctb"))
     )
 Description: Provides tools to simulate and sample spatial data.

@@ -44,7 +44,7 @@ sim_covariates = function(rast_grid, vgm = NULL, n = 6, ...){
                          model = cov_mod, nmax = nmax, locations = ~x + y)
   suppressWarnings({cov_stack = quiet(stats::predict(cov_mod, rast_grid_coords, nsim = n,
                                    indicators = check_args("indicators", additional_args, ifnotfound = 0)))})
-  cov_stack = terra::rast(cov_stack)
+  cov_stack = terra::rast(cov_stack, crs = "local")
   names(cov_stack) = paste0("cov", seq_len(n))
   return(cov_stack)
 }
