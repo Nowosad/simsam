@@ -1,8 +1,8 @@
 pandoc: 3.1.3
-pkgdown: 2.1.1
+pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   articles/Covariates_and_outcomes: Covariates_and_outcomes.html
   articles/Creating-spatial-proxies: Creating-spatial-proxies.html
   articles/Sampling: Sampling.html
-last_built: 2025-04-07T14:08Z
+last_built: 2025-07-17T12:59Z
