@@ -27,7 +27,7 @@ sam_field = function(x, size, type = "", value, nclusters, ...) {
     simpoints = sf::st_as_sf(simpoints)
     # simpoints = sf::st_sample(x, size, ...)
   } else if (type == "clustered") {
-    simpoints = clustered_sample(x, size, nclusters, value)
+    simpoints = clustered_sample(x, size, nclusters, value, ...)
   } else {
     simpoints = terra::spatSample(x, size = size, as.points = TRUE, ...)
     simpoints = sf::st_as_sf(simpoints)
@@ -121,7 +121,7 @@ clustered_sample = function(x, size, nclusters, radius, ...){
     buf = terra::crop(x, buf, mask = TRUE)
 
     # Simulate points
-    suppressWarnings({children = terra::spatSample(buf, size = npcluster, na.rm	= TRUE,
+    suppressWarnings({children = terra::spatSample(buf, size = npcluster,
                                                    method = "random", as.points = TRUE, ...)})
     res = rbind(res, children)
   }
