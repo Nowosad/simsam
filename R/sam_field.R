@@ -21,12 +21,18 @@ sam_field = function(x, size, type = "", type_opts = NULL, ...) {
   #   x = sf::st_as_sf(terra::as.polygons(terra::ext(x)))
   # }
   if (type == "jittered") {
+    if (is.null(type_opts) || is.null(type_opts$amount)) {
+      stop("'type_opts$amount' must be provided when type = 'jittered'")
+    }
     simpoints = jittered_sample(x, size, type_opts$amount, ...)
   } else if (type == "random") {
     simpoints = terra::spatSample(x, size = size, method = "random", as.points = TRUE, ...)
     simpoints = sf::st_as_sf(simpoints)
     # simpoints = sf::st_sample(x, size, ...)
   } else if (type == "clustered") {
+    if (is.null(type_opts) || is.null(type_opts$nclusters) || is.null(type_opts$radius)) {
+      stop("'type_opts$nclusters' and 'type_opts$radius' must be provided when type = 'clustered'")
+    }
     simpoints = clustered_sample(x, size, type_opts$nclusters, type_opts$radius, ...)
   } else {
     simpoints = terra::spatSample(x, size = size, as.points = TRUE, ...)
