@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simsam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
       </span>
     </div>
 
@@ -77,7 +77,7 @@
                         <h4 data-toc-skip class="author">Jakub
 Nowosad</h4>
             
-            <h4 data-toc-skip class="date">2025-10-02</h4>
+            <h4 data-toc-skip class="date">2025-11-27</h4>
       
 
       <div class="hidden name"><code>Covariates_and_outcomes.Rmd</code></div>
@@ -91,7 +91,7 @@ seed.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">simsam</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; terra 1.8.70</span></span>
+<span><span class="co">#&gt; terra 1.8.80</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2024</span><span class="op">-</span><span class="fl">12</span><span class="op">-</span><span class="fl">13</span><span class="op">)</span></span></code></pre></div>
 <p>Next, we specify a raster template for the simulations.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -114,7 +114,7 @@ variogram model) are set to default values.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">covariates_one</span> <span class="op">=</span> <span class="fu"><a href="../reference/sim_covariates.html">sim_covariates</a></span><span class="op">(</span><span class="va">rast_grid</span>, range <span class="op">=</span> <span class="fl">10</span>, n <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/panel.html" class="external-link">panel</a></span><span class="op">(</span><span class="va">covariates_one</span>, nr <span class="op">=</span> <span class="fl">1</span>, col.main <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Covariates_and_outcomes_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
+<p><img src="Covariates_and_outcomes_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" width="700"></p>
 <p>The second example uses a complete variogram model to simulate four
 covariates for the provided raster grid. Here, we specify not only the
 range but also the model type (exponential) and the sill of the
@@ -122,13 +122,13 @@ variogram model.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">covariates_two</span> <span class="op">=</span> <span class="fu"><a href="../reference/sim_covariates.html">sim_covariates</a></span><span class="op">(</span><span class="va">rast_grid</span>, vgm <span class="op">=</span> <span class="fu">gstat</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html" class="external-link">vgm</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"Exp"</span>, psill <span class="op">=</span> <span class="fl">1</span>, range <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>, n <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/panel.html" class="external-link">panel</a></span><span class="op">(</span><span class="va">covariates_two</span>, nr <span class="op">=</span> <span class="fl">1</span>, col.main <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Covariates_and_outcomes_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
+<p><img src="Covariates_and_outcomes_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" width="700"></p>
 <p>The third example uses a nugget effect to simulate four covariates
 without any spatial correlation.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">covariates_three</span> <span class="op">=</span> <span class="fu"><a href="../reference/sim_covariates.html">sim_covariates</a></span><span class="op">(</span><span class="va">rast_grid</span>, vgm <span class="op">=</span> <span class="fu">gstat</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html" class="external-link">vgm</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"Nug"</span>, psill <span class="op">=</span> <span class="fl">2</span>, range <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, n <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/panel.html" class="external-link">panel</a></span><span class="op">(</span><span class="va">covariates_three</span>, nr <span class="op">=</span> <span class="fl">1</span>, col.main <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Covariates_and_outcomes_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
+<p><img src="Covariates_and_outcomes_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" width="700"></p>
 <p>The last example creates a single simulation of a binary outcome
 (<code>indicator = TRUE</code>) based on a specified variogram model and
 a beta value. The result of such a simulation depends on the specified
@@ -137,7 +137,7 @@ variogram model and the beta value.</p>
 <code class="sourceCode R"><span><span class="va">covariates_four</span> <span class="op">=</span> <span class="fu"><a href="../reference/sim_covariates.html">sim_covariates</a></span><span class="op">(</span><span class="va">rast_grid</span>, vgm <span class="op">=</span> <span class="fu">gstat</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html" class="external-link">vgm</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"Exp"</span>, psill <span class="op">=</span> <span class="fl">10</span>, range <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, n <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>                                 beta <span class="op">=</span> <span class="fl">30</span>, indicators <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">covariates_four</span>, nr <span class="op">=</span> <span class="fl">1</span>, col.main <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Covariates_and_outcomes_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
+<p><img src="Covariates_and_outcomes_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="blend">Blend<a class="anchor" aria-label="anchor" href="#blend"></a>
@@ -152,7 +152,7 @@ formula that combines them by adding them together.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">outcome_one</span> <span class="op">=</span> <span class="fu">simsam</span><span class="fu">::</span><span class="fu"><a href="../reference/blend_rasters.html">blend_rasters</a></span><span class="op">(</span><span class="va">covariates_one</span>, <span class="op">~</span> <span class="va">cov1</span> <span class="op">+</span> <span class="va">cov2</span> <span class="op">+</span> <span class="va">cov3</span> <span class="op">+</span> <span class="va">cov4</span><span class="op">)</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">outcome_one</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Covariates_and_outcomes_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
+<p><img src="Covariates_and_outcomes_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" width="700"></p>
 <p>The <code><a href="../reference/blend_rasters.html">blend_rasters()</a></code> function can also be used to further
 blend the outcomes with additional covariates. Here, we are adding a
 random noise (<code>cov1</code> from <code>covariates_three</code>) to
@@ -160,7 +160,7 @@ the outcome.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">outcome_two</span> <span class="op">=</span> <span class="fu">simsam</span><span class="fu">::</span><span class="fu"><a href="../reference/blend_rasters.html">blend_rasters</a></span><span class="op">(</span><span class="va">outcome_one</span>, <span class="op">~</span> <span class="va">outcome</span> <span class="op">+</span> <span class="va">cov1</span>, <span class="va">covariates_three</span><span class="op">)</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">outcome_two</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Covariates_and_outcomes_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
+<p><img src="Covariates_and_outcomes_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" width="700"></p>
 <p>The third example shows how to blend the first created outcome with a
 binary covariate (<code>cov1</code> from <code>covariates_four</code>).
 Additionally, it also highlights the flexibility of the formula
@@ -169,14 +169,14 @@ operations and constants.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">outcome_three</span> <span class="op">=</span> <span class="fu">simsam</span><span class="fu">::</span><span class="fu"><a href="../reference/blend_rasters.html">blend_rasters</a></span><span class="op">(</span><span class="va">outcome_one</span>, <span class="op">~</span> <span class="va">outcome</span> <span class="op">*</span> <span class="op">(</span><span class="va">cov1</span> <span class="op">+</span> <span class="fl">0.2</span><span class="op">)</span>, <span class="va">covariates_four</span><span class="op">)</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">outcome_three</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Covariates_and_outcomes_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
+<p><img src="Covariates_and_outcomes_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" width="700"></p>
 <p>Finally, the last example shows that the <code><a href="../reference/blend_rasters.html">blend_rasters()</a></code>
 function can be used in a pipe-like manner.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">outcome_four</span> <span class="op">=</span> <span class="fu">simsam</span><span class="fu">::</span><span class="fu"><a href="../reference/blend_rasters.html">blend_rasters</a></span><span class="op">(</span><span class="va">covariates_two</span>, <span class="op">~</span> <span class="va">cov1</span> <span class="op">+</span> <span class="va">cov2</span> <span class="op">*</span> <span class="va">cov3</span> <span class="op">+</span> <span class="va">cov4</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">simsam</span><span class="fu">::</span><span class="fu"><a href="../reference/blend_rasters.html">blend_rasters</a></span><span class="op">(</span><span class="op">~</span> <span class="va">outcome</span> <span class="op">*</span> <span class="op">(</span><span class="va">cov1</span> <span class="op">+</span> <span class="fl">0.2</span><span class="op">)</span>, <span class="va">covariates_four</span><span class="op">)</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">outcome_four</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Covariates_and_outcomes_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
+<p><img src="Covariates_and_outcomes_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" width="700"></p>
 </div>
   </div>
 
@@ -195,7 +195,7 @@ function can be used in a pipe-like manner.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer>

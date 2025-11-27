@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simsam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
       </span>
     </div>
 
@@ -60,7 +60,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">sam_field</span><span class="op">(</span><span class="va">x</span>, <span class="va">size</span>, type <span class="op">=</span> <span class="st">""</span>, <span class="va">value</span>, <span class="va">nclusters</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">sam_field</span><span class="op">(</span><span class="va">x</span>, <span class="va">size</span>, type <span class="op">=</span> <span class="st">""</span>, type_opts <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -80,13 +80,10 @@
 <code>"jittered"</code>, <code>"random"</code>, <code>"clustered"</code>.</p></dd>
 
 
-<dt id="arg-value">value<a class="anchor" aria-label="anchor" href="#arg-value"></a></dt>
-<dd><p>Amount of jitter to apply to the samples (in map units; only used when <code>type = "jittered"</code>)
-or radius of the buffer around each cluster (only used when <code>type = "clustered"</code>).</p></dd>
-
-
-<dt id="arg-nclusters">nclusters<a class="anchor" aria-label="anchor" href="#arg-nclusters"></a></dt>
-<dd><p>Number of clusters to simulate. Only used when <code>type = "clustered"</code>.</p></dd>
+<dt id="arg-type-opts">type_opts<a class="anchor" aria-label="anchor" href="#arg-type-opts"></a></dt>
+<dd><p>A list of options specific to the selected <code>type</code>.
+When <code>type = "jittered"</code>, the <code>amount</code> option specifies the amount of jitter to apply to the samples (in map units).
+When <code>type = "clustered"</code>, the <code>nclusters</code> option specifies the number of clusters to simulate, and the <code>radius</code> option specifies the radius of the buffer around each cluster.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -97,7 +94,7 @@ or radius of the buffer around each cluster (only used when <code>type = "cluste
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">rast_grid</span> <span class="op">=</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span>ncols <span class="op">=</span> <span class="fl">300</span>, nrows <span class="op">=</span> <span class="fl">100</span>, xmin <span class="op">=</span> <span class="fl">0</span>, xmax <span class="op">=</span> <span class="fl">300</span>, ymin <span class="op">=</span> <span class="fl">0</span>, ymax <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">sam_field</span><span class="op">(</span><span class="va">rast_grid</span>, <span class="fl">100</span>, <span class="st">"jittered"</span>, <span class="fl">5</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">sam_field</span><span class="op">(</span><span class="va">rast_grid</span>, <span class="fl">100</span>, <span class="st">"jittered"</span>, type_opts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>amount <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 108 features and 0 fields</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: POINT</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
@@ -129,7 +126,7 @@ or radius of the buffer around each cluster (only used when <code>type = "cluste
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer></div>
