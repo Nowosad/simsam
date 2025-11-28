@@ -4,7 +4,7 @@
 \alias{sam_field}
 \title{Sample spatial field}
 \usage{
-sam_field(x, size, type = "", value, nclusters, ...)
+sam_field(x, size, type = "", type_opts = NULL, ...)
 }
 \arguments{
 \item{x}{A raster object.}
@@ -14,10 +14,9 @@ sam_field(x, size, type = "", value, nclusters, ...)
 \item{type}{Expected spatial distribution of the samples. Possible values are:
 \code{"jittered"}, \code{"random"}, \code{"clustered"}.}
 
-\item{value}{Amount of jitter to apply to the samples (in map units; only used when \code{type = "jittered"})
-or radius of the buffer around each cluster (only used when \code{type = "clustered"}).}
-
-\item{nclusters}{Number of clusters to simulate. Only used when \code{type = "clustered"}.}
+\item{type_opts}{A list of options specific to the selected \code{type}.
+When \code{type = "jittered"}, the \code{amount} option specifies the amount of jitter to apply to the samples (in map units).
+When \code{type = "clustered"}, the \code{nclusters} option specifies the number of clusters to simulate, and the \code{radius} option specifies the radius of the buffer around each cluster.}
 
 \item{...}{Additional arguments passed to \code{terra::spatSample()}.}
 }
@@ -26,5 +25,5 @@ Create a sample of a spatial field.
 }
 \examples{
 rast_grid = terra::rast(ncols = 300, nrows = 100, xmin = 0, xmax = 300, ymin = 0, ymax = 100)
-sam_field(rast_grid, 100, "jittered", 5)
+sam_field(rast_grid, 100, "jittered", type_opts = list(amount = 5))
 }

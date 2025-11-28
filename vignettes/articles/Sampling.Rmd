@@ -32,25 +32,26 @@ Alternatively, we can read a raster from a file.
 
 The **simsam** package supports several types of sampling, including jittered, clustered, and random with the `sam_field()` function.
 All these types of sampling require the `rast_grid` object, the number of samples to create (`size`), and the type of sampling (`type`).
+Type-specific options are passed via the `type_opts` list parameter.
 
 The jittered sampling is a regular sample moved by an amount of noise. 
-The `value` parameter controls the amount of jitter.
+The `amount` option in `type_opts` controls the amount of jitter.
 Importantly, this sampling type ensures that all the samples fall within the sampling window.
 
 ```{r}
-sample_j1 = sam_field(rast_grid, size = 100, type = "jittered", value = 5)
+sample_j1 = sam_field(rast_grid, size = 100, type = "jittered", type_opts = list(amount = 5))
 plot(sample_j1)
-sample_j2 = sam_field(rast_grid, size = 100, type = "jittered", value = 20)
+sample_j2 = sam_field(rast_grid, size = 100, type = "jittered", type_opts = list(amount = 20))
 plot(sample_j2)
 ```
 
 The clustered sampling creates samples forming groups of points with similar locations.
-The outcome is controlled by the `nclusters` and `value` parameters, where the former controls the number of clusters and the latter the amount of noise (location variance) within each cluster.
+The outcome is controlled by the `nclusters` and `radius` options in `type_opts`, where the former controls the number of clusters and the latter the radius of the buffer around each cluster.
 
 ```{r}
-sample_c1 = sam_field(rast_grid, 100, "clustered", nclusters = 5, value = 5)
+sample_c1 = sam_field(rast_grid, 100, "clustered", type_opts = list(nclusters = 5, radius = 5))
 plot(sample_c1)
-sample_c2 = sam_field(rast_grid, 100, "clustered", nclusters = 5, value = 10)
+sample_c2 = sam_field(rast_grid, 100, "clustered", type_opts = list(nclusters = 5, radius = 10))
 plot(sample_c2)
 ```
 

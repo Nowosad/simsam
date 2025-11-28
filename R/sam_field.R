@@ -6,28 +6,34 @@
 #' @param size Number of samples to create.
 #' @param type Expected spatial distribution of the samples. Possible values are:
 #' `"jittered"`, `"random"`, `"clustered"`.
-#' @param value Amount of jitter to apply to the samples (in map units; only used when `type = "jittered"`)
-#' or radius of the buffer around each cluster (only used when `type = "clustered"`).
-#' @param nclusters Number of clusters to simulate. Only used when `type = "clustered"`.
+#' @param type_opts A list of options specific to the selected `type`.
+#' When `type = "jittered"`, the `amount` option specifies the amount of jitter to apply to the samples (in map units).
+#' When `type = "clustered"`, the `nclusters` option specifies the number of clusters to simulate, and the `radius` option specifies the radius of the buffer around each cluster.
 #' @param ... Additional arguments passed to `terra::spatSample()`.
 #'
 #' @export
 #'
 #' @examples
 #' rast_grid = terra::rast(ncols = 300, nrows = 100, xmin = 0, xmax = 300, ymin = 0, ymax = 100)
-#' sam_field(rast_grid, 100, "jittered", 5)
-sam_field = function(x, size, type = "", value, nclusters, ...) {
+#' sam_field(rast_grid, 100, "jittered", type_opts = list(amount = 5))
+sam_field = function(x, size, type = "", type_opts = NULL, ...) {
   # if (!inherits(x, "sf") || !(sf::st_geometry_type(x, by_geometry = FALSE) %in% c("POLYGON", "MULTIPOLYGON"))) {
   #   x = sf::st_as_sf(terra::as.polygons(terra::ext(x)))
   # }
   if (type == "jittered") {
-    simpoints = jittered_sample(x, size, value, ...)
+    if (is.null(type_opts) || is.null(type_opts$amount)) {
+      stop("'type_opts$amount' must be provided when type = 'jittered'")
+    }
+    simpoints = jittered_sample(x, size, type_opts$amount, ...)
   } else if (type == "random") {
     simpoints = terra::spatSample(x, size = size, method = "random", as.points = TRUE, ...)
     simpoints = sf::st_as_sf(simpoints)
     # simpoints = sf::st_sample(x, size, ...)
   } else if (type == "clustered") {
-    simpoints = clustered_sample(x, size, nclusters, value, ...)
+    if (is.null(type_opts) || is.null(type_opts$nclusters) || is.null(type_opts$radius)) {
+      stop("'type_opts$nclusters' and 'type_opts$radius' must be provided when type = 'clustered'")
+    }
+    simpoints = clustered_sample(x, size, type_opts$nclusters, type_opts$radius, ...)
   } else {
     simpoints = terra::spatSample(x, size = size, as.points = TRUE, ...)
     simpoints = sf::st_as_sf(simpoints)
