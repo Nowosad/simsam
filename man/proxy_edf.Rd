@@ -8,7 +8,7 @@ proxy_edf(coords = NULL)
 }
 \arguments{
 \item{coords}{Optional coordinates. Can be a matrix, data frame, \code{sf}, or
-\code{SpatVector} with x and y columns. If \code{NULL}, uses default locations.}
+\code{SpatVector} with x and y columns. If \code{NULL}, uses default locations: four corners and center of the raster extent.}
 }
 \value{
 A function that accepts \code{rast_grid} and returns a \code{SpatRaster}

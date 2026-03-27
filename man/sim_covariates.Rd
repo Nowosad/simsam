@@ -11,8 +11,8 @@ sim_covariates(rast_grid, n = 6, method)
 
 \item{n}{The number of covariates to simulate (must be >= 1)}
 
-\item{method}{A simulation \strong{factory function} — call the function with
-parameters to create the method, don't pass the function itself.
+\item{method}{A simulation \strong{factory function} —- call the function with
+parameters to create the method (remember to not pass the function itself).
 For example: \code{method = simulate_gaussian(range = 25)}, not
 \code{method = simulate_gaussian}. See \code{\link[=simulate_gaussian]{simulate_gaussian()}} and
 \code{\link[=simulate_random]{simulate_random()}} for examples.}

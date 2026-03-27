@@ -32,7 +32,6 @@ sf1 = sim_covariates(
 g1 = blend_rasters(sf1, ~ cov1 + cov4)
 g2 = blend_rasters(g1, ~ outcome^2 + (cov2 + 2), sf1)
 
-
 terra::plot(g1)
 terra::plot(g2)
 }

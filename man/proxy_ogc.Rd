@@ -13,8 +13,7 @@ proxy_ogc(n = 5)
 A function that accepts \code{rast_grid} and returns a \code{SpatRaster}
 }
 \description{
-Returns a function that generates Oblique Geographic Coordinates (OGC) as
-covariates for digital soil mapping.
+Returns a function that generates Oblique Geographic Coordinates (OGC) as covariates.
 }
 \examples{
 rast_grid = terra::rast(

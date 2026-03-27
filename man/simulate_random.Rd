@@ -18,7 +18,6 @@ A function that accepts \code{rast_grid} and \code{n} and returns a \code{SpatRa
 }
 \description{
 Returns a function that simulates uncorrelated random fields (white noise).
-Useful for testing or as a baseline comparison.
 }
 \examples{
 rast_grid = terra::rast(ncols = 300, nrows = 100,

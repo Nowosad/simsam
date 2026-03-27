@@ -2,7 +2,7 @@
 % Please edit documentation in R/sim_covariates.R
 \name{simulate_gaussian}
 \alias{simulate_gaussian}
-\title{Simulate Gaussian random fields using gstat}
+\title{Simulate Gaussian random fields}
 \usage{
 simulate_gaussian(
   vgm = NULL,
@@ -12,7 +12,7 @@ simulate_gaussian(
   nugget = 0,
   beta = 0,
   nmax = 30,
-  indicators = 0,
+  indicators = FALSE,
   seed = NULL
 )
 }
@@ -31,7 +31,7 @@ Ignored if \code{vgm} is provided.}
 
 \item{beta}{Mean of the Gaussian field (default: 0). Passed to \code{gstat::gstat()}.}
 
-\item{nmax}{Maximum number of points for prediction (default: 30).
+\item{nmax}{The number of nearest observations used for kriging simulation (default: 30).
 Passed to \code{gstat::gstat()}.}
 
 \item{indicators}{Indicator thresholds (default: \code{FALSE}). Passed to
@@ -47,8 +47,7 @@ A function that accepts \code{rast_grid} and \code{n} and returns a \code{SpatRa
 }
 \description{
 Returns a function that simulates spatially correlated Gaussian random fields
-using a variogram model. This factory pattern allows for reusable simulation
-engines with pre-configured parameters.
+using a variogram model.
 }
 \examples{
 rast_grid = terra::rast(ncols = 300, nrows = 100,
