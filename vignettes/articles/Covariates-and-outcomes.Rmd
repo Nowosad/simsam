@@ -28,16 +28,17 @@ rast_grid = terra::rast(xmin = 0, xmax = 200, ymin = 0, ymax = 200,
 
 ## Simulate
 
-We can simulate any number of covariates based on specified parameters using the `sim_covariates()` function.
-This function is rather flexible when it comes to which parameters to use, as it can take a range or a complete variogram model, and some additional simulation arguments.
-This is shown below.
+We can simulate any number of covariates using the `sim_covariates()` function.
+This function is flexible: it accepts simulation engines created by functions like `simulate_gaussian()` or `simulate_random()`.
+This allows for reusable simulation configurations.
 
-The first example shows the use of just a `range` parameter to simulate four covariates for the provided raster grid.
-The rest of the arguments (e.g., `beta` representing the average value of the field, `nmax` representing the maximum number of points to simulate, and `psill` representing the sill of the variogram model) are set to default values.
+The first example uses `simulate_gaussian()` with just a `range` parameter to simulate four covariates for the provided raster grid.
+The rest of the arguments (e.g., `beta` representing the average value of the field, `nmax` representing the number of nearest observations used for kriging simulation, and `psill` representing the sill of the variogram model) are set to default values.
 
 ```{r}
 #| fig-height: 2.5
-covariates_one = sim_covariates(rast_grid, range = 10, n = 4)
+covariates_one = sim_covariates(rast_grid, n = 4, 
+                                method = simulate_gaussian(range = 10))
 terra::panel(covariates_one, nr = 1, col.main = "white")
 ```
 
@@ -46,7 +47,8 @@ Here, we specify not only the range but also the model type (exponential) and th
 
 ```{r}
 #| fig-height: 2.5
-covariates_two = sim_covariates(rast_grid, vgm = gstat::vgm(model = "Exp", psill = 1, range = 10), n = 4)
+covariates_two = sim_covariates(rast_grid, n = 4, 
+                                method = simulate_gaussian(vgm = gstat::vgm(model = "Exp", psill = 1, range = 10)))
 terra::panel(covariates_two, nr = 1, col.main = "white")
 ```
 
@@ -54,18 +56,20 @@ The third example uses a nugget effect to simulate four covariates without any s
 
 ```{r}
 #| fig-height: 2.5
-covariates_three = sim_covariates(rast_grid, vgm = gstat::vgm(model = "Nug", psill = 2, range = 0), n = 4)
+covariates_three = sim_covariates(rast_grid, n = 4, 
+                                  method = simulate_gaussian(vgm = gstat::vgm(model = "Nug", psill = 2, range = 0)))
 terra::panel(covariates_three, nr = 1, col.main = "white")
 ```
 
-The last example creates a single simulation of a binary outcome (`indicator = TRUE`) based on a specified variogram model and a beta value.
-The result of such a simulation depends on the specified variogram model and the beta value.
+The last example creates a single simulation of a binary outcome (`indicators = TRUE`) based on a specified variogram model and a beta value.
+When `indicators = TRUE`, the simulation produces categorical values (0/1) rather than continuous values.
+The result depends on the specified variogram model and the beta value (which represents the mean of the underlying Gaussian field).
 
 ```{r}
 #| warning: false
 #| fig-height: 2.5
-covariates_four = sim_covariates(rast_grid, vgm = gstat::vgm(model = "Exp", psill = 10, range = 100), n = 1,
-                                 beta = 30, indicators = TRUE)
+covariates_four = sim_covariates(rast_grid, n = 1, 
+                                method = simulate_gaussian(vgm = gstat::vgm(model = "Exp", psill = 10, range = 100), beta = 30, indicators = TRUE))
 terra::plot(covariates_four, nr = 1, col.main = "white")
 ```
 
