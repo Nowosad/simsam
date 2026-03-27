@@ -2,158 +2,238 @@
 #'
 #' Create a sample of a spatial field.
 #'
-#' @param x A raster object.
+#' @param x A raster object (`SpatRaster`).
 #' @param size Number of samples to create.
-#' @param type Expected spatial distribution of the samples. Possible values are:
-#' `"jittered"`, `"random"`, `"clustered"`.
-#' @param type_opts A list of options specific to the selected `type`.
-#' When `type = "jittered"`, the `amount` option specifies the amount of jitter to apply to the samples (in map units).
-#' When `type = "clustered"`, the `nclusters` option specifies the number of clusters to simulate, and the `radius` option specifies the radius of the buffer around each cluster.
-#' @param ... Additional arguments passed to `terra::spatSample()`.
+#' @param method Sampling method (function created by [sample_random()],
+#'   [sample_jittered()], or [sample_clustered()]).
 #'
+#' @return An `sf` object with sampled points
 #' @export
 #'
 #' @examples
-#' rast_grid = terra::rast(ncols = 300, nrows = 100, xmin = 0, xmax = 300, ymin = 0, ymax = 100)
-#' sam_field(rast_grid, 100, "jittered", type_opts = list(amount = 5))
-sam_field = function(x, size, type = "", type_opts = NULL, ...) {
-  # if (!inherits(x, "sf") || !(sf::st_geometry_type(x, by_geometry = FALSE) %in% c("POLYGON", "MULTIPOLYGON"))) {
-  #   x = sf::st_as_sf(terra::as.polygons(terra::ext(x)))
-  # }
-  if (type == "jittered") {
-    if (is.null(type_opts) || is.null(type_opts$amount)) {
-      stop("'type_opts$amount' must be provided when type = 'jittered'")
-    }
-    simpoints = jittered_sample(x, size, type_opts$amount, ...)
-  } else if (type == "random") {
-    simpoints = terra::spatSample(x, size = size, method = "random", as.points = TRUE, ...)
-    simpoints = sf::st_as_sf(simpoints)
-    # simpoints = sf::st_sample(x, size, ...)
-  } else if (type == "clustered") {
-    if (is.null(type_opts) || is.null(type_opts$nclusters) || is.null(type_opts$radius)) {
-      stop("'type_opts$nclusters' and 'type_opts$radius' must be provided when type = 'clustered'")
-    }
-    simpoints = clustered_sample(x, size, type_opts$nclusters, type_opts$radius, ...)
-  } else {
-    simpoints = terra::spatSample(x, size = size, as.points = TRUE, ...)
-    simpoints = sf::st_as_sf(simpoints)
+#' rast_grid = terra::rast(
+#'   ncols = 300, nrows = 100,
+#'   xmin = 0, xmax = 300,
+#'   ymin = 0, ymax = 100
+#' )
+#'
+#' sam_field(
+#'   rast_grid,
+#'   100,
+#'   method = sample_jittered(amount = 5)
+#' )
+#'
+sam_field = function(
+  x,
+  size,
+  method = sample_random()
+) {
+
+  if (!inherits(x, "SpatRaster")) {
+    stop("`x` must be a SpatRaster")
   }
-  simpoints = sf::st_sf(geometry = sf::st_geometry(simpoints))
-  return(simpoints)
+  if (!is.function(method)) {
+    stop("`method` must be a function")
+  }
+
+  pts = method(x = x, size = size)
+
+  if (!inherits(pts, "sf")) {
+    stop("Sampling method must return an sf object")
+  }
+
+  return(pts)
 }
 
-#' Simulates regular sample jittered by an amount of noise
+#' Random sampling method
 #'
-#' Simulates regular sample jittered by an amount of noise ~ U(-amount, amount).
+#' Returns a function that performs random sampling on a spatial field.
 #'
-#' @param x sf/sfc polygon where samples will be simulated.
-#' @param size Number of samples to create.
-#' @param amount Amount of jitter to apply.
-#' @param ... Additional arguments passed to `terra::spatSample()`.
-jittered_sample = function(x, size, amount, ...){
-  if (!terra::hasValues(x)){
+#' @param ... Additional arguments passed to `terra::spatSample()`
+#'
+#' @return A function that accepts `x` (SpatRaster) and `size` and returns an `sf` object
+#' @export
+#'
+#' @examples
+#' rast_grid = terra::rast(
+#'   ncols = 300, nrows = 100,
+#'   xmin = 0, xmax = 300,
+#'   ymin = 0, ymax = 100
+#' )
+#'
+#' sam_field(rast_grid, 100, method = sample_random())
+sample_random = function(...) {
+
+  function(x, size) {
+
+    pts = terra::spatSample(
+      x,
+      size = size,
+      method = "random",
+      as.points = TRUE,
+      ...
+    )
+
+    return(sf::st_as_sf(pts))
+  }
+}
+
+#' Jittered sampling method
+#'
+#' Returns a function that performs jittered sampling on a spatial field.
+#' Regular points are generated first, then jittered by a random amount.
+#'
+#' @param amount Jitter amount in map units
+#' @param ... Additional arguments passed to `terra::spatSample()`
+#'
+#' @return A function that accepts `x` (SpatRaster) and `size` and returns an `sf` object
+#' @export
+#'
+#' @examples
+#' rast_grid = terra::rast(
+#'   ncols = 300, nrows = 100,
+#'   xmin = 0, xmax = 300,
+#'   ymin = 0, ymax = 100
+#' )
+#'
+#' sam_field(rast_grid, 100, method = sample_jittered(amount = 5))
+sample_jittered = function(amount, ...) {
+
+  function(x, size) {
+
+    jittered_sample(
+      x = x,
+      size = size,
+      amount = amount,
+      ...
+    )
+  }
+}
+
+#' Clustered sampling method
+#'
+#' Returns a function that performs clustered sampling on a spatial field.
+#' Cluster centers are randomly distributed, then samples are drawn within
+#' a buffer radius around each cluster.
+#'
+#' @param nclusters Number of clusters
+#' @param radius Cluster radius (in map units)
+#' @param ... Additional arguments passed to `terra::spatSample()`
+#'
+#' @return A function that accepts `x` (SpatRaster) and `size` and returns an `sf` object
+#' @export
+#'
+#' @examples
+#' rast_grid = terra::rast(
+#'   ncols = 300, nrows = 100,
+#'   xmin = 0, xmax = 300,
+#'   ymin = 0, ymax = 100
+#' )
+#'
+#' sam_field(rast_grid, 200, method = sample_clustered(nclusters = 5, radius = 10))
+sample_clustered = function(nclusters, radius, ...) {
+
+  function(x, size) {
+
+    clustered_sample(
+      x = x,
+      size = size,
+      nclusters = nclusters,
+      radius = radius,
+      ...
+    )
+  }
+}
+
+# Jittered sampling engine
+jittered_sample = function(x, size, amount, ...) {
+
+  if (!terra::hasValues(x)) {
     terra::values(x) = 1
   }
 
-  # Simulate regular points, jitter
-  res = terra::spatSample(x, size = size, method = "regular", xy = TRUE, ...)
+  res = terra::spatSample(
+    x,
+    size = size,
+    method = "regular",
+    xy = TRUE,
+    ...
+  )
+
   res$X2 = res$x + stats::runif(nrow(res), -amount, amount)
   res$Y2 = res$y + stats::runif(nrow(res), -amount, amount)
 
-  # Ensure they fall within the sampling window, if not try again until they do
   res_t = terra::vect(res, geom = c("X2", "Y2"), crs = terra::crs(x))
-  interF = which(!terra::relate(res_t, terra::ext(x), relation = "intersects"))
-  while (length(interF) > 0) {
-    res$X2[interF] = res$X[interF] + stats::runif(length(interF), -amount, amount)
-    res$Y2[interF] = res$Y[interF] + stats::runif(length(interF), -amount, amount)
+  interF = which(!terra::relate(res_t, x, relation = "intersects"))
+
+  max_iter = 100
+  iter = 0
+
+  while (length(interF) > 0 && iter < max_iter) {
+
+    res$X2[interF] = res$x[interF] +
+      stats::runif(length(interF), -amount, amount)
+
+    res$Y2[interF] = res$y[interF] +
+      stats::runif(length(interF), -amount, amount)
+
     res_t = terra::vect(res, geom = c("X2", "Y2"), crs = terra::crs(x))
-    interF = which(!terra::relate(res_t, terra::ext(x), relation = "intersects"))
+    interF = which(!terra::relate(res_t, x, relation = "intersects"))
+
+    iter = iter + 1
   }
 
-  res$x = NULL
-  res$y = NULL
-  res = terra::vect(res, geom = c("X2", "Y2"), crs = terra::crs(x))
+  res = terra::vect(res[, c("X2", "Y2")],
+                    geom = c("X2", "Y2"),
+                    crs = terra::crs(x))
+
   return(sf::st_as_sf(res))
 }
-# jittered_sample0 = function(x, size, amount, ...) {
-#   # Simulate regular points, jitter
-#   res = sf::st_sample(x, size, type = "regular", ...)
-#   res = as.data.frame(sf::st_coordinates(res))
-#   res$X2 = res$X + stats::runif(nrow(res), -amount, amount)
-#   res$Y2 = res$Y + stats::runif(nrow(res), -amount, amount)
-#
-#   # Ensure they fall within the sampling window, if not try again until they do
-#   res_sf = sf::st_as_sf(res, coords = c("X2", "Y2"), crs = sf::st_crs(x))
-#   interF = !sf::st_intersects(res_sf, x, sparse = FALSE)
-#   while (any(interF)) {
-#     res$X2[interF] = res$X[interF] + stats::runif(sum(interF), -amount, amount)
-#     res$Y2[interF] = res$Y[interF] + stats::runif(sum(interF), -amount, amount)
-#     res_sf = sf::st_as_sf(res, coords = c("X2", "Y2"), crs = sf::st_crs(x))
-#     interF = !sf::st_intersects(res_sf, x, sparse = FALSE)
-#   }
-#
-#   res$X = NULL
-#   res$Y = NULL
-#   res = sf::st_as_sf(res, coords = c("X2", "Y2"), crs = sf::st_crs(x))
-#   res
-# }
 
-#' Simulates clustered samples
-#'
-#' Simulates clustered samples by simulating a number of randomly sampled
-#' clusters, and then randomly simulate points within a buffer of the clusters.
-#'
-#' @param x sf/sfc polygon where samples will be simulated.
-#' @param size Number of samples to create.
-#' @param nclusters Number of clusters to simulate.
-#' @param radius Radius of the buffer for intra-cluster simulation.
-#' @param ... Additional arguments passed to `terra::spatSample()`.
-clustered_sample = function(x, size, nclusters, radius, ...){
-  if (!terra::hasValues(x)){
+# Clustered sampling engine
+clustered_sample = function(
+  x,
+  size,
+  nclusters,
+  radius,
+  ...
+) {
+
+  if (!terra::hasValues(x)) {
     terra::values(x) = 1
   }
 
-  # Number of points per cluster
-  npcluster = round((size - nclusters) / nclusters, 0)
+  npcluster = floor(size / nclusters)
 
-  # Simulate clusters
-  clusters = terra::spatSample(x, size = nclusters, method = "random", as.points = TRUE, ...)
-  res = clusters
+  clusters = terra::spatSample(
+    x,
+    size = nclusters,
+    method = "random",
+    as.points = TRUE,
+    ...
+  )
 
-  # Simulate points per cluster
-  for (i in 1:nrow(clusters)) {
-    # Generate buffer and cut parts outside of the area of study
+  children_list = vector("list", nrow(clusters))
+
+  for (i in seq_len(nrow(clusters))) {
+
     buf = terra::buffer(clusters[i, ], radius)
     buf = terra::crop(x, buf, mask = TRUE)
 
-    # Simulate points
-    suppressWarnings({children = terra::spatSample(buf, size = npcluster,
-                                                   method = "random", as.points = TRUE, ...)})
-    res = rbind(res, children)
+    children = suppressWarnings(
+      terra::spatSample(
+        buf,
+        size = npcluster,
+        method = "random",
+        as.points = TRUE,
+        ...
+      )
+    )
+
+    children_list[[i]] = children
   }
-  res$lyr.1 = NULL
+
+  res = do.call(rbind, c(list(clusters), children_list))
+
   return(sf::st_as_sf(res))
 }
-# clustered_sample0 = function(x, size, nclusters, radius) {
-#   # Number of points per cluster
-#   npcluster = round((size - nclusters) / nclusters, 0)
-#
-#   # Simulate clusters
-#   clusters = sf::st_sf(geometry = sf::st_sample(x, nclusters, type = "random"))
-#   res = clusters
-#
-#   # Simulate points per cluster
-#   for (i in 1:nrow(clusters)) {
-#     # Generate buffer and cut parts outside of the area of study
-#     buf = sf::st_buffer(clusters[i, ], dist = radius)
-#     buf = sf::st_intersection(buf, x)
-#
-#     # Simulate points
-#     children = sf::st_sf(geometry = sf::st_sample(buf, npcluster, type = "random"))
-#     res = rbind(res, children)
-#   }
-#
-#   return(res)
-# }
-
-
