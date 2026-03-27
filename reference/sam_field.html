@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simsam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -32,7 +32,7 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/Covariates_and_outcomes.html">Simulating covariates and outcomes</a>
+      <a href="../articles/Covariates-and-outcomes.html">Simulating covariates and outcomes</a>
     </li>
     <li>
       <a href="../articles/Creating-spatial-proxies.html">Creating spatial proxies</a>
@@ -60,7 +60,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">sam_field</span><span class="op">(</span><span class="va">x</span>, <span class="va">size</span>, type <span class="op">=</span> <span class="st">""</span>, type_opts <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">sam_field</span><span class="op">(</span><span class="va">x</span>, <span class="va">size</span>, method <span class="op">=</span> <span class="fu"><a href="sample_random.html">sample_random</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -68,50 +68,54 @@
 
 
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p>A raster object.</p></dd>
+<dd><p>A raster object (<code>SpatRaster</code>).</p></dd>
 
 
 <dt id="arg-size">size<a class="anchor" aria-label="anchor" href="#arg-size"></a></dt>
 <dd><p>Number of samples to create.</p></dd>
 
 
-<dt id="arg-type">type<a class="anchor" aria-label="anchor" href="#arg-type"></a></dt>
-<dd><p>Expected spatial distribution of the samples. Possible values are:
-<code>"jittered"</code>, <code>"random"</code>, <code>"clustered"</code>.</p></dd>
-
-
-<dt id="arg-type-opts">type_opts<a class="anchor" aria-label="anchor" href="#arg-type-opts"></a></dt>
-<dd><p>A list of options specific to the selected <code>type</code>.
-When <code>type = "jittered"</code>, the <code>amount</code> option specifies the amount of jitter to apply to the samples (in map units).
-When <code>type = "clustered"</code>, the <code>nclusters</code> option specifies the number of clusters to simulate, and the <code>radius</code> option specifies the radius of the buffer around each cluster.</p></dd>
-
-
-<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Additional arguments passed to <code><a href="https://rspatial.github.io/terra/reference/sample.html" class="external-link">terra::spatSample()</a></code>.</p></dd>
+<dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
+<dd><p>Sampling method (function created by <code><a href="sample_random.html">sample_random()</a></code>,
+<code><a href="sample_jittered.html">sample_jittered()</a></code>, or <code><a href="sample_clustered.html">sample_clustered()</a></code>).</p></dd>
 
 </dl></div>
+    <div id="value">
+    <h2>Value</h2>
+    <p>An <code>sf</code> object with sampled points</p>
+    </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">rast_grid</span> <span class="op">=</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span>ncols <span class="op">=</span> <span class="fl">300</span>, nrows <span class="op">=</span> <span class="fl">100</span>, xmin <span class="op">=</span> <span class="fl">0</span>, xmax <span class="op">=</span> <span class="fl">300</span>, ymin <span class="op">=</span> <span class="fl">0</span>, ymax <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">sam_field</span><span class="op">(</span><span class="va">rast_grid</span>, <span class="fl">100</span>, <span class="st">"jittered"</span>, type_opts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>amount <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">rast_grid</span> <span class="op">=</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  ncols <span class="op">=</span> <span class="fl">300</span>, nrows <span class="op">=</span> <span class="fl">100</span>,</span></span>
+<span class="r-in"><span>  xmin <span class="op">=</span> <span class="fl">0</span>, xmax <span class="op">=</span> <span class="fl">300</span>,</span></span>
+<span class="r-in"><span>  ymin <span class="op">=</span> <span class="fl">0</span>, ymax <span class="op">=</span> <span class="fl">100</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">sam_field</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">rast_grid</span>,</span></span>
+<span class="r-in"><span>  <span class="fl">100</span>,</span></span>
+<span class="r-in"><span>  method <span class="op">=</span> <span class="fu"><a href="sample_jittered.html">sample_jittered</a></span><span class="op">(</span>amount <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 108 features and 0 fields</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: POINT</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: 5.355953 ymin: 4.266263 xmax: 295.545 ymax: 95.63973</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: 4.4779 ymin: 3.735812 xmax: 294.5015 ymax: 96.15376</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> CRS:           NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> First 10 features:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                     geometry</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   POINT (12.15347 8.74139)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  POINT (29.84905 9.437398)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  POINT (45.36387 12.04038)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  POINT (54.81957 12.11388)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  POINT (78.94946 5.885855)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  POINT (93.63162 6.186852)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7  POINT (107.1302 10.70952)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8  POINT (126.4533 10.14613)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9   POINT (145.0731 7.10121)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10  POINT (156.532 9.916109)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   POINT (5.53674 3.735812)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  POINT (26.16662 5.221823)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   POINT (44.35406 6.63006)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   POINT (60.66815 9.56979)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   POINT (79.15347 8.74139)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  POINT (95.84905 9.437398)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  POINT (112.3639 12.04038)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  POINT (121.8196 12.11388)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  POINT (144.9495 5.885855)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 POINT (160.6316 6.186852)</span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>

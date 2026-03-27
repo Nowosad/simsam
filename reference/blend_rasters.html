@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simsam</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -32,7 +32,7 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/Covariates_and_outcomes.html">Simulating covariates and outcomes</a>
+      <a href="../articles/Covariates-and-outcomes.html">Simulating covariates and outcomes</a>
     </li>
     <li>
       <a href="../articles/Creating-spatial-proxies.html">Creating spatial proxies</a>
@@ -60,19 +60,19 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">blend_rasters</span><span class="op">(</span><span class="va">r</span>, <span class="va">formula</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">blend_rasters</span><span class="op">(</span><span class="va">x</span>, <span class="va">formula</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
 
 
-<dl><dt id="arg-r">r<a class="anchor" aria-label="anchor" href="#arg-r"></a></dt>
+<dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p>A <code>SpatRaster</code> object with one or more layers</p></dd>
 
 
 <dt id="arg-formula">formula<a class="anchor" aria-label="anchor" href="#arg-formula"></a></dt>
-<dd><p>A formula that specifies how to combine the rasters</p></dd>
+<dd><p>A formula specifying how to combine the rasters</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -88,10 +88,16 @@
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">rast_grid</span> <span class="op">=</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span>ncols <span class="op">=</span> <span class="fl">300</span>, nrows <span class="op">=</span> <span class="fl">100</span>,</span></span>
 <span class="r-in"><span>  xmin <span class="op">=</span> <span class="fl">0</span>, xmax <span class="op">=</span> <span class="fl">300</span>, ymin <span class="op">=</span> <span class="fl">0</span>, ymax <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">sf1</span> <span class="op">=</span> <span class="fu"><a href="sim_covariates.html">sim_covariates</a></span><span class="op">(</span><span class="va">rast_grid</span>, range <span class="op">=</span> <span class="fl">25</span>,</span></span>
-<span class="r-in"><span>  vgm <span class="op">=</span> <span class="fu">gstat</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/gstat/reference/vgm.html" class="external-link">vgm</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"Exp"</span>, psill <span class="op">=</span> <span class="fl">1</span>, range <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>, n <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">g1</span> <span class="op">=</span> <span class="fu">blend_rasters</span><span class="op">(</span><span class="va">sf1</span>, <span class="va">y</span> <span class="op">~</span> <span class="va">cov1</span> <span class="op">+</span> <span class="va">cov4</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">g2</span> <span class="op">=</span> <span class="fu">blend_rasters</span><span class="op">(</span><span class="va">g1</span>, <span class="va">y</span> <span class="op">~</span> <span class="va">outcome</span><span class="op">^</span><span class="fl">2</span> <span class="op">+</span> <span class="op">(</span><span class="va">cov2</span> <span class="op">+</span> <span class="fl">2</span><span class="op">)</span>, <span class="va">sf1</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">sf1</span> <span class="op">=</span> <span class="fu"><a href="sim_covariates.html">sim_covariates</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">rast_grid</span>,</span></span>
+<span class="r-in"><span>  n <span class="op">=</span> <span class="fl">4</span>,</span></span>
+<span class="r-in"><span>  method <span class="op">=</span> <span class="fu"><a href="simulate_gaussian.html">simulate_gaussian</a></span><span class="op">(</span>range <span class="op">=</span> <span class="fl">25</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">g1</span> <span class="op">=</span> <span class="fu">blend_rasters</span><span class="op">(</span><span class="va">sf1</span>, <span class="op">~</span> <span class="va">cov1</span> <span class="op">+</span> <span class="va">cov4</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">g2</span> <span class="op">=</span> <span class="fu">blend_rasters</span><span class="op">(</span><span class="va">g1</span>, <span class="op">~</span> <span class="va">outcome</span><span class="op">^</span><span class="fl">2</span> <span class="op">+</span> <span class="op">(</span><span class="va">cov2</span> <span class="op">+</span> <span class="fl">2</span><span class="op">)</span>, <span class="va">sf1</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">g1</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="blend_rasters-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">g2</span><span class="op">)</span></span></span>
