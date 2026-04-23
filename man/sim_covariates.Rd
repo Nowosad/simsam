@@ -2,38 +2,40 @@
 % Please edit documentation in R/sim_covariates.R
 \name{sim_covariates}
 \alias{sim_covariates}
-\title{Simulate a raster stack of covariates based on a variogram model}
+\title{Simulate a raster stack of covariates}
 \usage{
-sim_covariates(rast_grid, vgm = NULL, n = 6, ...)
+sim_covariates(rast_grid, n = 6, method)
 }
 \arguments{
-\item{rast_grid}{A raster object with the desired dimensions}
+\item{rast_grid}{A \code{SpatRaster} object with the desired dimensions}
 
-\item{vgm}{A variogram model object}
+\item{n}{The number of covariates to simulate (must be >= 1)}
 
-\item{n}{The number of covariates to simulate}
-
-\item{...}{Additional arguments to be passed to the \code{gstat::vgm()} function; \code{beta}, \code{nmax}, \code{indicators} (see Examples)}
+\item{method}{A simulation \strong{factory function} —- call the function with
+parameters to create the method (remember to not pass the function itself).
+For example: \code{method = simulate_gaussian(range = 25)}, not
+\code{method = simulate_gaussian}. See \code{\link[=simulate_gaussian]{simulate_gaussian()}} and
+\code{\link[=simulate_random]{simulate_random()}} for examples.}
 }
 \value{
-A raster object with the simulated covariates
+A \code{SpatRaster} with \code{n} layers named \code{cov1}, \code{cov2}, ..., \code{covN}
 }
 \description{
-Simulate a raster stack of covariates based on a variogram model
+Generic function for simulating spatial covariates using a specified method.
 }
 \examples{
 rast_grid = terra::rast(ncols = 300, nrows = 100,
   xmin = 0, xmax = 300, ymin = 0, ymax = 100)
-sf1 = sim_covariates(rast_grid, range = 25,
-  vgm = gstat::vgm(model = "Exp", psill = 1, range = 10), n = 4)
-sf2 = sim_covariates(rast_grid, range = 50, n = 4)
-sf3 = sim_covariates(rast_grid, range = 25,
-  vgm = gstat::vgm(model = "Nug", psill = 2, range = 0), n = 4)
-#sf4 = sim_covariates(rast_grid, range = 25,
-#  vgm = gstat::vgm(model = "Exp", psill = 10, range = 100), n = 1,
-#   beta = 30, indicators = TRUE)
+# Gaussian simulation
+sf1 = sim_covariates(rast_grid, n = 4, method = simulate_gaussian(range = 25))
+sf2 = sim_covariates(rast_grid, n = 4, method = simulate_gaussian(range = 50, model = "Exp"))
+# Reusable simulation engine
+gauss = simulate_gaussian(range = 25)
+sf3 = sim_covariates(rast_grid, n = 4, method = gauss)
+# Random simulation
+sf4 = sim_covariates(rast_grid, n = 4, method = simulate_random())
 terra::plot(sf1)
 terra::plot(sf2)
 terra::plot(sf3)
-#terra::plot(sf4)
+terra::plot(sf4)
 }

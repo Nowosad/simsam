@@ -4,12 +4,12 @@
 \alias{blend_rasters}
 \title{Blend rasters based on a provided formula}
 \usage{
-blend_rasters(r, formula, ...)
+blend_rasters(x, formula, ...)
 }
 \arguments{
-\item{r}{A \code{SpatRaster} object with one or more layers}
+\item{x}{A \code{SpatRaster} object with one or more layers}
 
-\item{formula}{A formula that specifies how to combine the rasters}
+\item{formula}{A formula specifying how to combine the rasters}
 
 \item{...}{Additional \code{SpatRaster} objects to blend}
 }
@@ -22,10 +22,16 @@ Blend rasters based on a provided formula
 \examples{
 rast_grid = terra::rast(ncols = 300, nrows = 100,
   xmin = 0, xmax = 300, ymin = 0, ymax = 100)
-sf1 = sim_covariates(rast_grid, range = 25,
-  vgm = gstat::vgm(model = "Exp", psill = 1, range = 10), n = 4)
-g1 = blend_rasters(sf1, y ~ cov1 + cov4)
-g2 = blend_rasters(g1, y ~ outcome^2 + (cov2 + 2), sf1)
+
+sf1 = sim_covariates(
+  rast_grid,
+  n = 4,
+  method = simulate_gaussian(range = 25)
+)
+
+g1 = blend_rasters(sf1, ~ cov1 + cov4)
+g2 = blend_rasters(g1, ~ outcome^2 + (cov2 + 2), sf1)
+
 terra::plot(g1)
 terra::plot(g2)
 }

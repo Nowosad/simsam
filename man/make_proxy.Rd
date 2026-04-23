@@ -5,31 +5,40 @@
 \alias{add_proxy}
 \title{Generate spatial proxies}
 \usage{
-make_proxy(rast_grid, type, opts = NULL)
+make_proxy(rast_grid, method = proxy_coordinates())
 
-add_proxy(rast_grid, type, opts = NULL)
+add_proxy(rast_grid, method = proxy_coordinates())
 }
 \arguments{
-\item{rast_grid}{A raster object with the desired dimensions}
+\item{rast_grid}{A \code{SpatRaster}}
 
-\item{type}{The type of proxy to generate. Options are coordinates ("coordinates"), Euclidean Distance Fields ("edf"), and Oblique Geographic Coordinates ("ogc")}
-
-\item{opts}{A list of options to pass to the proxy generation function. Only used when \code{type = "edf"} or \code{type = "ogc"}.
-When \code{type = "edf"}, the "\code{coords}" option is and sf object a matrix with two columns (x, y) representing the coordinates to use when generating Euclidean Distance Fields. When \code{type = "ogc"}, the "\code{n}" option is an integer representing the number of angles to use when generating Oblique Geographic Coordinates.}
+\item{method}{A proxy method created by \verb{proxy_*()} functions}
 }
 \value{
-A SpatRaster object with the generated spatial proxies
+A \code{SpatRaster} object
+
+\code{SpatRaster}
 }
 \description{
 The \code{make_proxy()} function generates spatial proxies for a given raster object.
-It generates three types of proxies: coordinates, Euclidean Distance Fields (EDF), and Oblique Geographic Coordinates (OGC).
-Additionally, the \code{add_proxy()} function can be used to add a proxy to an existing raster object.
+It generates spatial proxies such as:
+\itemize{
+\item coordinates
+\item Euclidean Distance Fields (EDF)
+\item Oblique Geographic Coordinates (OGC)
+}
 }
 \examples{
-rast_grid = terra::rast(ncols = 300, nrows = 100, xmin = 0, xmax = 300, ymin = 0, ymax = 100)
-proxy_coords = make_proxy(rast_grid, "coordinates")
-proxy_edf = make_proxy(rast_grid, "edf")
-proxy_ogc = make_proxy(rast_grid, "ogc", opts = list(n = 5))
+rast_grid = terra::rast(
+  ncols = 300, nrows = 100,
+  xmin = 0, xmax = 300,
+  ymin = 0, ymax = 100
+)
+
+proxy_coords = make_proxy(rast_grid, proxy_coordinates())
+proxy_edf = make_proxy(rast_grid, proxy_edf())
+proxy_ogc = make_proxy(rast_grid, proxy_ogc(n = 5))
+
 terra::plot(proxy_coords)
 terra::plot(proxy_edf)
 terra::plot(proxy_ogc)
