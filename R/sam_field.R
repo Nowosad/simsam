@@ -218,11 +218,11 @@ clustered_sample = function(
   for (i in seq_len(nrow(clusters))) {
 
     buf = terra::buffer(clusters[i, ], radius)
-    buf = terra::crop(x, buf, mask = TRUE)
+    raster_buf = terra::crop(x, buf, mask = TRUE, snap = "out")
 
     children = suppressWarnings(
       terra::spatSample(
-        buf,
+        raster_buf,
         size = npcluster,
         method = "random",
         as.points = TRUE,
