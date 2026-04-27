@@ -225,8 +225,9 @@ clustered_sample = function(
         raster_buf,
         size = npcluster,
         method = "random",
-        as.points = TRUE,
-        ...
+        na.rm = TRUE,
+        as.points = TRUE#,
+        # ...
       )
     )
 
