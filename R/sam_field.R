@@ -156,6 +156,7 @@ jittered_sample = function(x, size, amount, ...) {
     x,
     size = size,
     method = "regular",
+    exact = TRUE,
     xy = TRUE,
     ...
   )

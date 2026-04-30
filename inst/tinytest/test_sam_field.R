@@ -14,7 +14,7 @@ expect_true(inherits(test_random, "sf"), info = "Random sampling should return a
 expect_true(inherits(test_clustered, "sf"), info = "Clustered sampling should return an sf object")
 
 # Check if the function returns the correct number of samples
-expect_equal(nrow(test_jittered), 12, info = "Jittered sampling should return the correct number of samples")
+expect_equal(nrow(test_jittered), 10, info = "Jittered sampling should return the correct number of samples")
 expect_equal(nrow(test_random), 10, info = "Random sampling should return the correct number of samples")
 expect_equal(nrow(test_clustered), 9, info = "Clustered sampling should return the correct number of samples")
 expect_true(nrow(test_clustered) <= 10, info = "Clustered sampling should not exceed requested size")
