@@ -16,7 +16,24 @@ expect_true(inherits(test_clustered, "sf"), info = "Clustered sampling should re
 # Check if the function returns the correct number of samples
 expect_equal(nrow(test_jittered), 12, info = "Jittered sampling should return the correct number of samples")
 expect_equal(nrow(test_random), 10, info = "Random sampling should return the correct number of samples")
-expect_equal(nrow(test_clustered), 12, info = "Clustered sampling should return the correct number of samples")
+expect_equal(nrow(test_clustered), 9, info = "Clustered sampling should return the correct number of samples")
+expect_true(nrow(test_clustered) <= 10, info = "Clustered sampling should not exceed requested size")
+
+# Check clustered sample size for non-divisible size and nclusters
+test_clustered_remainder = sam_field(
+  rast_grid,
+  size = 11,
+  method = sample_clustered(nclusters = 3, radius = 5)
+)
+expect_equal(
+  nrow(test_clustered_remainder),
+  9,
+  info = "Clustered sampling should not include centroids"
+)
+expect_true(
+  nrow(test_clustered_remainder) <= 11,
+  info = "Clustered sampling should not exceed requested size"
+)
 
 # Check pipe-friendly usage
 test_pipe = rast_grid |>
