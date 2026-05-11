@@ -156,6 +156,7 @@ jittered_sample = function(x, size, amount, ...) {
     x,
     size = size,
     method = "regular",
+    exact = TRUE,
     xy = TRUE,
     ...
   )
@@ -234,7 +235,7 @@ clustered_sample = function(
     children_list[[i]] = children
   }
 
-  res = do.call(rbind, c(list(clusters), children_list))
+  res = do.call(rbind, children_list)
 
   return(sf::st_as_sf(res))
 }
