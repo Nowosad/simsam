@@ -239,3 +239,160 @@ clustered_sample = function(
 
   return(sf::st_as_sf(res))
 }
+
+#' Biased (preferential) sampling method
+#'
+#' Returns a function that performs preferential sampling on a spatial field.
+#' A weights layer is built from one or more covariates (as a `SpatRaster`),
+#' and cells are sampled with probability proportional to those weights, so
+#' samples can be biased towards particular parts of the covariate value range.
+#'
+#' @param covariate Name(s) or index/indices of the raster layer(s) to use as
+#'   the biasing covariate(s). Defaults to all layers of `x`.
+#' @param strength Numeric controlling the strength of the bias applied to the
+#'   rescaled covariate values. `strength = 0` gives (approximately) uniform
+#'   sampling, `strength = 1` weights sampling linearly by covariate value, and
+#'   larger values give a stronger preference for high-value cells. Negative
+#'   values bias towards low-value cells.
+#' @param fun Optional function applied to the combined, rescaled (`[0, 1]`)
+#'   covariate raster to produce a weights raster. When supplied it overrides
+#'   `strength`. Must accept and return a numeric vector (it is passed to
+#'   `terra::app()`).
+#' @param combine How to combine multiple covariates into a single weight,
+#'   either `"prod"` (product) or `"mean"`. Ignored for a single covariate.
+#' @param range Optional named list giving `c(min, max)` value ranges used to
+#'   restrict sampling to cells whose covariate values fall within the range,
+#'   e.g. `list(elevation = c(100, 500))`. Cells outside the range are masked out.
+#' @param replace Logical; should cells be sampled with replacement?
+#' @param ... Reserved for future use.
+#'
+#' @return A function that accepts `x` (SpatRaster) and `size` and returns an
+#'   `sf` object.
+#' @export
+#'
+#' @examples
+#' rast_grid = terra::rast(
+#'   ncols = 300, nrows = 100,
+#'   xmin = 0, xmax = 300,
+#'   ymin = 0, ymax = 100
+#' )
+#' terra::values(rast_grid) = runif(terra::ncell(rast_grid))
+#'
+#' sam_field(rast_grid, 100, method = sample_biased(strength = 2))
+sample_biased <- function(
+  covariate = NULL,
+  strength = 1,
+  fun = NULL,
+  combine = c("prod", "mean"),
+  range = NULL,
+  replace = FALSE,
+  ...
+) {
+  combine <- match.arg(combine)
+
+  function(x, size) {
+    biased_sample(
+      x = x,
+      size = size,
+      covariate = covariate,
+      strength = strength,
+      fun = fun,
+      combine = combine,
+      range = range,
+      replace = replace,
+      ...
+    )
+  }
+}
+
+# Biased (preferential) sampling engine
+biased_sample <- function(
+  x,
+  size,
+  covariate = NULL,
+  strength = 1,
+  fun = NULL,
+  combine = "prod",
+  range = NULL,
+  replace = FALSE,
+  ...
+) {
+  if (!terra::hasValues(x)) {
+    stop("`x` must have values to perform biased sampling")
+  }
+
+  if (is.null(covariate)) {
+    covariate <- names(x)
+  }
+  x_cov <- terra::subset(x, covariate)
+
+  if (!is.null(range)) {
+    if (is.null(names(range))) {
+      stop("`range` must be a named list matching covariate layer names")
+    }
+    for (nm in names(range)) {
+      if (!nm %in% names(x_cov)) {
+        stop("`range` name '", nm, "' is not a selected covariate")
+      }
+      rng <- range[[nm]]
+      lyr <- x_cov[[nm]]
+      keep <- (lyr >= rng[1]) & (lyr <= rng[2])
+      x_cov <- terra::mask(x_cov, keep, maskvalues = c(FALSE, NA))
+    }
+  }
+
+  rng <- terra::minmax(x_cov)
+  mn <- rng["min", ]
+  mx <- rng["max", ]
+  span <- mx - mn
+  span[span == 0] <- 1
+  scaled <- (x_cov - mn) / span
+
+  # na.rm = FALSE => any cell missing a covariate becomes NA (omitted)
+  if (terra::nlyr(scaled) == 1) {
+    combined <- scaled
+  } else if (combine == "prod") {
+    combined <- terra::app(scaled, fun = prod, na.rm = FALSE)
+  } else {
+    combined <- terra::app(scaled, fun = mean, na.rm = FALSE)
+  }
+
+  if (!is.null(fun)) {
+    if (!is.function(fun)) {
+      stop("`fun` must be a function")
+    }
+    weights <- terra::app(combined, fun = fun)
+  } else {
+    weights <- (combined + 1e-9)^strength
+  }
+  names(weights) <- "weight"
+
+  samp <- terra::spatSample(
+    weights,
+    size = size,
+    method = "weights",
+    replace = replace,
+    na.rm = TRUE, # drop NA incl. partially observed cells
+    xy = TRUE,
+    cells = TRUE,
+    values = FALSE,
+    ...
+  )
+
+  cov_vals <- terra::extract(x_cov, samp$cell)
+  cov_vals$ID <- NULL
+
+  out <- data.frame(
+    x = samp$x,
+    y = samp$y,
+    cov_vals
+  )
+
+  res <- sf::st_as_sf(
+    out,
+    coords = c("x", "y"),
+    crs = sf::st_crs(x)
+  )
+
+  return(res)
+}
