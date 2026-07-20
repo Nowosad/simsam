@@ -240,7 +240,7 @@ clustered_sample = function(
   return(sf::st_as_sf(res))
 }
 
-#' Biased (preferential) sampling method
+#' Preferential (biased) sampling method
 #'
 #' Returns a function that performs preferential sampling on a spatial field.
 #' A weights layer is built from one or more covariates (as a `SpatRaster`),
@@ -250,10 +250,13 @@ clustered_sample = function(
 #' @param covariate Name(s) or index/indices of the raster layer(s) to use as
 #'   the biasing covariate(s). Defaults to all layers of `x`.
 #' @param strength Numeric controlling the strength of the bias applied to the
-#'   rescaled covariate values. `strength = 0` gives (approximately) uniform
-#'   sampling, `strength = 1` weights sampling linearly by covariate value, and
-#'   larger values give a stronger preference for high-value cells. Negative
-#'   values bias towards low-value cells.
+#'   rescaled covariate values. `strength` is used as an exponent on the rescaled 
+#'   covariate values to produce a weights raster together with a small constant
+#'   for numerical stability (e.g. `(z + 1e-6)^strength`). With the default 
+#'   `strength = 1`, the weights are proportional to the covariate values. 
+#'   With `strength = 0`, all cells have equal weight (uniform sampling). With 
+#'   `strength > 1`, higher covariate values are increasingly favored, and 
+#'   with `strength < 0`, lower covariate values are favored.
 #' @param fun Optional function applied to the combined, rescaled (`[0, 1]`)
 #'   covariate raster to produce a weights raster. When supplied it overrides
 #'   `strength`. Must accept and return a numeric vector (it is passed to
@@ -278,8 +281,8 @@ clustered_sample = function(
 #' )
 #' terra::values(rast_grid) = runif(terra::ncell(rast_grid))
 #'
-#' sam_field(rast_grid, 100, method = sample_biased(strength = 2))
-sample_biased <- function(
+#' sam_field(rast_grid, 100, method = sample_preferential(strength = 2))
+sample_preferential <- function(
   covariate = NULL,
   strength = 1,
   fun = NULL,
@@ -291,7 +294,7 @@ sample_biased <- function(
   combine <- match.arg(combine)
 
   function(x, size) {
-    biased_sample(
+    preferential_sample(
       x = x,
       size = size,
       covariate = covariate,
@@ -305,8 +308,8 @@ sample_biased <- function(
   }
 }
 
-# Biased (preferential) sampling engine
-biased_sample <- function(
+# Preferential sampling engine
+preferential_sample <- function(
   x,
   size,
   covariate = NULL,
