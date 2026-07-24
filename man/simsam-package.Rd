@@ -19,6 +19,7 @@ Authors:
 Other contributors:
 \itemize{
   \item Carles Milà [contributor]
+  \item Darius Andreas Görgen [contributor]
 }
 
 }
